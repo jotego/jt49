@@ -21,6 +21,8 @@
     
     */
 
+`timescale 1ns / 1ps
+
 module jt49_noise(
   input clk, // this is the divided down clock from the core
   input rst_n,

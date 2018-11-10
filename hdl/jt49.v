@@ -21,12 +21,15 @@
     
     */
 
+`timescale 1ns / 1ps
+
 module jt49 ( // note that input ports are not multiplexed
     input           rst_n,
     input           clk,    // signal on positive edge
     input           cen,    // clock enable on negative edge
     input  [3:0]    adr,
-    input           wr,  // write
+    input           cs_n,
+    input           wr_n,  // write
     input  [7:0]    data_in,
     output reg [7:0] data_out,
     output reg [9:0] sound
@@ -45,7 +48,7 @@ always @(negedge clk)
     cen_ch <= cen & clkdiv16[3];
 
 // internal modules operate at clk/16
-jt49_clkdiv #(12) chA( 
+jt49_div #(12) chA( 
     .clk        ( clk           ), 
     .rst_n      ( rst_n         ), 
     .cen        ( cen_ch        ),
@@ -53,7 +56,7 @@ jt49_clkdiv #(12) chA(
     .div        ( sqwave[0]     )
 );
 
-jt49_clkdiv #(12) chB( 
+jt49_div #(12) chB( 
     .clk        ( clk           ), 
     .rst_n      ( rst_n         ), 
     .cen        ( cen_ch        ),    
@@ -61,7 +64,7 @@ jt49_clkdiv #(12) chB(
     .div        ( sqwave[1]     ) 
 );
 
-jt49_clkdiv #(12) chC( 
+jt49_div #(12) chC( 
     .clk        ( clk           ), 
     .rst_n      ( rst_n         ), 
     .cen        ( cen_ch        ),
@@ -80,7 +83,7 @@ jt49_noise ng(
 );
 
 // envelope generator
-jt49_clkdiv #(16) envclkdiv( 
+jt49_div #(16) envclkdiv( 
     .clk    ( clkdiv16[2]       ), 
     .cen    ( cen               ),
     .rst_n  ( rst_n             ),
@@ -139,9 +142,9 @@ always @(posedge clk)
 always @(posedge clk)
     if( !rst_n ) begin
         data_out <= 8'd0;
-    end else if(cen) begin
+    end else if( cen && !cs_n ) begin
         data_out <= regarray[ adr ];
-        if( wr ) regarray[adr] <= data_in;
+        if( !wr_n ) regarray[adr] <= data_in;
     end
 
 endmodule

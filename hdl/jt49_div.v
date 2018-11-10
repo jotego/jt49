@@ -21,36 +21,43 @@
     
     */
 
-module jt49_clkdiv #(parameter width=12 )(   
+`timescale 1ns / 1ps
+
+module jt49_div #(parameter width=12 )(   
     input           clk, // this is the divided down clock from the core
     input           cen,
     input           rst_n,
     input [width-1:0]  period,
-    output          div
+    output reg      cen_div
 );
 
 reg [width-1:0]count;
-reg clkdiv;
+reg div;
 
-initial clkdiv=0;
+always @(negedge clk)
+    cen_div <= div; // move it to the negative edge
 
-assign div = period==1 ? clk : clkdiv;
+wire [width-1:0] one = { {width-1{1'b0}}, 1'b1};
 
-always @(posedge clk or negedge rst_n) begin
+always @(posedge clk ) begin
   if( !rst_n) begin
-    count   <= 0;
-    clkdiv  <= 0;
+    count <= one;
+    div   <= 1'b0;
   end
   else if(cen) begin
-    if( period==0 ) begin
-      clkdiv<=0;
-      count <=0;
+    if( period=={width{1'b0}} ) begin
+        count <= one;
+        div   <= 1'b0;
     end
-    else if( count >= period ) begin
-        count   <= 0;
-        clkdiv  <= ~clkdiv;
-      end
-      else count <= count+1;
+    else if( count == period ) begin
+        count <= one;
+        div   <= 1'b1;
+    end
+    else begin 
+        count <= count + one;
+        div   <= 1'b0;
+    end
   end
 end
+
 endmodule
