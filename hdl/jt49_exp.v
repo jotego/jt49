@@ -22,28 +22,44 @@
     */
 
 `timescale 1ns / 1ps
-module jt49_exp
-    input      [3:0] din,
-    output reg [8:0] dout 
+module jt49_exp(
+    input      [4:0] din,
+    output reg [7:0] dout 
 );
 
 always @(din)
     case (din) // each step is 1/sqrt(2) of the previous value, starting from the end
-        4'd00: dout=9'd000;
-        4'd01: dout=9'd003;
-        4'd02: dout=9'd004;
-        4'd03: dout=9'd005;
-        4'd04: dout=9'd008;
-        4'd05: dout=9'd011;
-        4'd06: dout=9'd015;
-        4'd07: dout=9'd021;
-        4'd08: dout=9'd030;
-        4'd09: dout=9'd043;
-        4'd10: dout=9'd060;
-        4'd11: dout=9'd085;
-        4'd12: dout=9'd121;
-        4'd13: dout=9'd171;
-        4'd14: dout=9'd241;
-        4'd15: dout=9'd341; // 341*3 = 1023, so the result fits in a 10-bit number
+        5'h00: dout=8'd0;
+        5'h01: dout=8'd1;
+        5'h02: dout=8'd2;
+        5'h03: dout=8'd2;
+        5'h04: dout=8'd2;
+        5'h05: dout=8'd3;
+        5'h06: dout=8'd3;
+        5'h07: dout=8'd4;
+        5'h08: dout=8'd5;
+        5'h09: dout=8'd6;
+        5'h0A: dout=8'd7;
+        5'h0B: dout=8'd8;
+        5'h0C: dout=8'd9;
+        5'h0D: dout=8'd11;
+        5'h0E: dout=8'd13;
+        5'h0F: dout=8'd16; 
+        5'h10: dout=8'd19;
+        5'h11: dout=8'd23;
+        5'h12: dout=8'd27;
+        5'h13: dout=8'd32;
+        5'h14: dout=8'd38;
+        5'h15: dout=8'd45;
+        5'h16: dout=8'd54;
+        5'h17: dout=8'd64;
+        5'h18: dout=8'd76;
+        5'h19: dout=8'd90;
+        5'h1A: dout=8'd107;
+        5'h1B: dout=8'd128;
+        5'h1C: dout=8'd152;
+        5'h1D: dout=8'd180;
+        5'h1E: dout=8'd214;
+        5'h1F: dout=8'd255; 
     endcase    
 endmodule

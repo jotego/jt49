@@ -1,0 +1,3 @@
+#!/bin/bash
+
+iverilog test.v ../../hdl/jt49_eg.v -o sim && sim -lxt

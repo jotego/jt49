@@ -27,43 +27,46 @@ module jt49_eg(
   input           clk, // this is the divided down clock from the core
   input           cen,
   input           rst_n,
+  input           restart,
   input [3:0]     ctrl,
-  output reg [3:0]gain
+  output reg [4:0]env
 );
 
-reg dir; // direction
-reg stop;
+reg inv, stop;
+reg [4:0] gain;
 
 wire CONT = ctrl[3];
 wire ATT  = ctrl[2];
 wire ALT  = ctrl[1];
 wire HOLD = ctrl[0];
 
+wire will_hold = !CONT || HOLD;
+
+always @(posedge clk)
+    if( cen ) env <= inv ? ~gain : gain;
+
 always @( posedge clk )
-  if( !rst_n) begin
-    gain  <=4'hF;
-    dir   <=1'b0;
-    stop  <=1'b0;
-  end
-  else if( cen ) begin
-      if (!stop) begin
-        if( !CONT && ((gain==0&&!dir) || (gain==4'hF&&dir))) begin
-          stop <= 1'b1;
-          gain <= 4'b0;
-        end
-        else begin
-          if( HOLD && ( (gain==0&&!dir) || (gain==4'hF&&dir))) begin // HOLD
-            stop <= 1'b1;
-            gain <= ALT ? ~gain : gain;
-          end 
-          else begin
-            gain <= dir ? gain+1 : gain-1;          
-            if( ctrl[1:0]==2'b10 && ( (gain==1&&!dir) || (gain==4'hE&&dir))) 
-              dir <= ~dir;  // ALTERNATE            
-          end
-        end
-      end
+    if( !rst_n) begin
+        gain  <= 5'h1F;
+        inv   <= 1'b0;
+        stop  <= 1'b0;
     end
-  end
+    else if( cen ) begin
+        if( restart ) begin
+            gain  <= 5'h1F;
+            inv   <= ATT;
+            stop  <= 1'b0;
+        end
+        else if (!stop) begin
+            if( gain==5'h00 ) begin
+                if( will_hold )
+                    stop <= 1'b1;
+                else
+                    gain <= gain-5'b1;
+                if( (!CONT&&ATT) || (CONT&&ALT) ) inv<=~inv;
+            end
+            else gain <= gain-5'b1;
+        end
+    end
 
 endmodule

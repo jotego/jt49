@@ -28,14 +28,10 @@ module jt49_div #(parameter width=12 )(
     input           cen,
     input           rst_n,
     input [width-1:0]  period,
-    output reg      cen_div
+    output reg      div
 );
 
 reg [width-1:0]count;
-reg div;
-
-always @(negedge clk)
-    cen_div <= div; // move it to the negative edge
 
 wire [width-1:0] one = { {width-1{1'b0}}, 1'b1};
 
@@ -45,18 +41,12 @@ always @(posedge clk ) begin
     div   <= 1'b0;
   end
   else if(cen) begin
-    if( period=={width{1'b0}} ) begin
+    if( count == period ) begin
         count <= one;
-        div   <= 1'b0;
+        div   <= ~div;
     end
-    else if( count == period ) begin
-        count <= one;
-        div   <= 1'b1;
-    end
-    else begin 
-        count <= count + one;
-        div   <= 1'b0;
-    end
+    else
+        if( period!={width{1'b0}} ) count <=  count + one ;
   end
 end
 

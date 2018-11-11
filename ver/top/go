@@ -1,0 +1,3 @@
+#!/bin/bash
+
+iverilog -f gather.f -o sim -s test && sim -lxt

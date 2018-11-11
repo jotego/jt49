@@ -24,34 +24,31 @@
 `timescale 1ns / 1ps
 
 module jt49_noise(
-  input clk, // this is the divided down clock from the core
-  input rst_n,
-  input cen,
-  input [4:0]period,
-  output noise
+  input       clk, // this is the divided down clock from the core
+  input       rst_n,
+  input       cen,
+  input [4:0] period,
+  output      noise
 );
 
 reg [5:0]count;
 reg [16:0]poly17;
-wire poly17_zero = poly17==0;
+wire poly17_zero = poly17==17'b0;
 assign noise=poly17[16];
-wire noise_clk;
+wire noise_en;
 
-always @(posedge noise_clk or negedge rst_n) begin
-  if( !rst_n) begin
-    poly17<=0;
-  end
-  else if(cen) begin
-     poly17<={ poly17[0] ^ poly17[2] ^ poly17_zero, poly17[16:1] };
-  end
-end
+always @( posedge clk )
+  if( !rst_n ) 
+    poly17 <= 17'd0;
+  else if( cen&&noise_en )
+     poly17 <= { poly17[0] ^ poly17[2] ^ poly17_zero, poly17[16:1] };
 
-jt49_clkdiv #(5) ndiv( 
+jt49_div #(5) u_div( 
   .clk    ( clk       ), 
   .cen    ( cen       ),
   .rst_n  ( rst_n     ), 
   .period ( period    ), 
-  .div    ( noise_clk ) 
+  .div    ( noise_en  ) 
 );
 
 endmodule
