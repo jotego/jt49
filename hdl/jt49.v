@@ -26,12 +26,13 @@
 module jt49 ( // note that input ports are not multiplexed
     input           rst_n,
     input           clk,    // signal on positive edge
-    input           cen,    // clock enable on negative edge
+    input           clk_en,    // clock enable on negative edge
     input  [3:0]    addr,
     input           cs_n,
     input           wr_n,  // write
-    input  [7:0]    data_in,
-    output reg [7:0] data_out,
+    input  [7:0]    din,
+    input           sel, // if sel is low, the clock is divided by 2
+    output reg [7:0] dout,
     output reg [9:0] sound
 );
 
@@ -43,6 +44,27 @@ wire [4:0] envelope;
 wire A,B,C;
 wire noise, envclk;
 reg Amix, Bmix, Cmix;
+
+reg cen;
+reg [2:0] clk_en2; 
+reg last_cen;
+reg clk_en3;
+
+localparam div_idx=1;
+
+always @(negedge clk) begin
+    last_cen <= clk_en2[div_idx];
+    clk_en3 <= !last_cen && clk_en2[div_idx];
+end
+
+always @(*)
+    cen = sel ? clk_en : clk_en3;
+
+always @(posedge clk)
+    if( !rst_n )
+        clk_en2 <= 3'b111;
+    else
+        if( clk_en ) clk_en2 <= clk_en2+3'd1;
 
 always @(negedge clk)
     cen_ch <= cen & clkdiv16[2];
@@ -151,15 +173,15 @@ always @(posedge clk)
 // register array
 always @(posedge clk)
     if( !rst_n ) begin
-        data_out <= 8'd0;
+        dout <= 8'd0;
         eg_restart <= 1'b0;
         regarray[0]=8'd0; regarray[4]=8'd0; regarray[ 8]=8'd0; regarray[12]=8'd0;
         regarray[1]=8'd0; regarray[5]=8'd0; regarray[ 9]=8'd0; regarray[13]=8'd0;
         regarray[2]=8'd0; regarray[6]=8'd0; regarray[10]=8'd0; regarray[14]=8'd0;
         regarray[3]=8'd0; regarray[7]=8'd0; regarray[11]=8'd0; regarray[15]=8'd0;
-    end else if( cen && !cs_n ) begin
-        data_out <= regarray[ addr ];
-        if( !wr_n ) regarray[addr] <= data_in;
+    end else if( !cs_n ) begin
+        dout <= regarray[ addr ];
+        if( !wr_n ) regarray[addr] <= din;
         eg_restart <= addr == 4'hD;
     end
 
