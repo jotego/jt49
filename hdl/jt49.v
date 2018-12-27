@@ -21,8 +21,6 @@
     
     */
 
-`timescale 1ns / 1ps
-
 module jt49 ( // note that input ports are not multiplexed
     input           rst_n,
     input           clk,    // signal on positive edge
@@ -37,37 +35,24 @@ module jt49 ( // note that input ports are not multiplexed
 );
 
 reg [7:0] regarray[15:0];
-reg [3:0] clkdiv16;
-reg cen_ch; // clock enable for channels
 
 wire [4:0] envelope;
 wire A,B,C;
 wire noise, envclk;
 reg Amix, Bmix, Cmix;
 
-reg cen;
-reg [2:0] clk_en2; 
-reg last_cen;
-reg clk_en3;
+wire cen2, cen4, cen_ch, cen16;
 
-localparam div_idx=1;
-
-always @(negedge clk) begin
-    last_cen <= clk_en2[div_idx];
-    clk_en3 <= !last_cen && clk_en2[div_idx];
-end
-
-always @(*)
-    cen = sel ? clk_en : clk_en3;
-
-always @(posedge clk)
-    if( !rst_n )
-        clk_en2 <= 3'b111;
-    else
-        if( clk_en ) clk_en2 <= clk_en2+3'd1;
-
-always @(negedge clk)
-    cen_ch <= cen & clkdiv16[2];
+jt49_cen u_cen(
+    .clk    ( clk     ), 
+    .rst_n  ( rst_n   ), 
+    .cen    ( clk_en  ),
+    .sel    ( sel     ),
+    .cen2   ( cen2    ),
+    .cen4   ( cen4    ),
+    .cen8   ( cen_ch  ), // 1 cen8 = 8 x clk
+    .cen16  ( cen16   )
+);
 
 // internal modules operate at clk/16
 jt49_div #(12) u_chA( 
@@ -105,19 +90,22 @@ jt49_noise u_ng(
 );
 
 // envelope generator
+wire eg_step;
+
 jt49_div #(16) u_envdiv( 
-    .clk    ( clkdiv16[2]       ), 
-    .cen    ( cen               ),
+    .clk    ( clk               ), 
+    .cen    ( cen_ch            ),
     .rst_n  ( rst_n             ),
     .period ({regarray[14],regarray[13]}), 
-    .div    ( envclk            ) 
+    .div    ( eg_step           ) 
 );  
 
 reg eg_restart;
 
 jt49_eg u_env(
     .clk    ( envclk            ),
-    .cen    ( cen               ),
+    .cen    ( cen_ch            ),
+    .step   ( eg_step           ),
     .rst_n  ( rst_n             ),
     .restart( eg_restart        ),
     .ctrl   ( regarray[4'hD][3:0] ),
@@ -149,7 +137,7 @@ wire use_envA = regarray[ 8][4];
 wire use_envB = regarray[ 9][4];
 wire use_envC = regarray[10][4];
 
-always @(posedge clk) if( cen ) begin
+always @(posedge clk) if( clk_en ) begin
     Amix <= (noise|regarray[7][3]) ^ (A|regarray[7][0]);
     Bmix <= (noise|regarray[7][4]) ^ (B|regarray[7][1]);
     Cmix <= (noise|regarray[7][5]) ^ (C|regarray[7][2]);
@@ -160,15 +148,6 @@ always @(posedge clk) if( cen ) begin
    
     sound <= { 2'b0, linA } + { 2'b0, linB } + { 2'b0, linC };
 end
-
-
-// 16-count divider
-always @(posedge clk)
-    if( !rst_n) begin
-        clkdiv16<=0;
-    end else if(cen) begin
-        clkdiv16<=clkdiv16+1;
-    end
 
 // register array
 always @(posedge clk)

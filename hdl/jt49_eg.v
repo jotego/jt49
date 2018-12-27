@@ -21,11 +21,10 @@
     
     */
 
-`timescale 1ns / 1ps
-
 module jt49_eg(
   input           clk, // this is the divided down clock from the core
   input           cen,
+  input           step,
   input           rst_n,
   input           restart,
   input [3:0]     ctrl,
@@ -57,7 +56,7 @@ always @( posedge clk )
             inv   <= ATT;
             stop  <= 1'b0;
         end
-        else if (!stop) begin
+        else if (step && !stop) begin
             if( gain==5'h00 ) begin
                 if( will_hold )
                     stop <= 1'b1;

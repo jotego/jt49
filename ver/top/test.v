@@ -87,11 +87,12 @@ always @(posedge clk)
 jt49 uut( // note that input ports are not multiplexed
     .rst_n      ( rst_n     ),
     .clk        ( clk       ),    // signal on positive edge
-    .cen        ( cen       ),    // clock enable on negative edge
+    .clk_en     ( cen       ),    // clock enable on negative edge
     .addr       ( addr      ),
     .cs_n       ( 1'b0      ),
     .wr_n       ( wr_n      ),  // write
-    .data_in    ( data_in   ),
+    .din        ( data_in   ),
+    .sel        ( 1'b1      ),
 //    .data_out   ( data_out  ),
     .sound      ( sound     )
 );
