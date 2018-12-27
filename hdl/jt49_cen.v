@@ -21,32 +21,23 @@
     
     */
 
-
-module jt49_div #(parameter width=12 )(   
-    input           clk, // this is the divided down clock from the core
-    input           cen,
-    input           rst_n,
-    input [width-1:0]  period,
-    output reg      div
+module jt49_cen(
+    input   clk,
+    input   rst_n,
+    input   cen,    // base clock enable signal
+    input   sel,    // when low, divide by 2 once more
+    output  reg cen8
 );
 
-reg [width-1:0]count;
+reg [2:0] cencnt=3'd0;
 
-wire [width-1:0] one = { {width-1{1'b0}}, 1'b1};
+always @(posedge clk) if(cen)
+    cencnt <= cencnt+3'd1;
 
-always @(posedge clk ) begin
-  if( !rst_n) begin
-    count <= one;
-    div   <= 1'b0;
-  end
-  else if(cen) begin
-    if( count == period ) begin
-        count <= one;
-        div   <= ~div;
-    end
-    else
-        if( period!={width{1'b0}} ) count <=  count + one ;
-  end
+wire toggle = sel ? cencnt[1:0]==2'd0 : cencnt[2:0]==3'd0;
+
+always @(negedge clk) begin
+    cen8   <= cen && toggle;
 end
 
-endmodule
+endmodule // jt49_cen
