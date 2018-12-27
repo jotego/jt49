@@ -48,10 +48,7 @@ jt49_cen u_cen(
     .rst_n  ( rst_n   ), 
     .cen    ( clk_en  ),
     .sel    ( sel     ),
-    .cen2   ( cen2    ),
-    .cen4   ( cen4    ),
-    .cen8   ( cen_ch  ), // 1 cen8 = 8 x clk
-    .cen16  ( cen16   )
+    .cen8   ( cen_ch  ) // 1 cen8 = 8 x clk
 );
 
 // internal modules operate at clk/16
