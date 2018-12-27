@@ -29,12 +29,12 @@ module jt49_cen(
     output  reg cen8
 );
 
-reg [3:0] cencnt=4'd0;
+reg [2:0] cencnt=3'd0;
 
 always @(posedge clk) if(cen)
-    cencnt <= cencnt+4'd1;
+    cencnt <= cencnt+3'd1;
 
-wire toggle = sel ? cencnt[2:0]==3'd0 : cencnt[3:0]==4'd0;
+wire toggle = sel ? cencnt[1:0]==2'd0 : cencnt[2:0]==3'd0;
 
 always @(negedge clk) begin
     cen8   <= cen && toggle;
