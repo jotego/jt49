@@ -22,22 +22,25 @@
     */
 
 module jt49 ( // note that input ports are not multiplexed
-    input           rst_n,
-    input           clk,    // signal on positive edge
-    input           clk_en,    // clock enable on negative edge
-    input  [3:0]    addr,
-    input           cs_n,
-    input           wr_n,  // write
-    input  [7:0]    din,
-    input           sel, // if sel is low, the clock is divided by 2
+    input            rst_n,
+    input            clk,    // signal on positive edge
+    input            clk_en,    // clock enable on negative edge
+    input  [3:0]     addr,
+    input            cs_n,
+    input            wr_n,  // write
+    input  [7:0]     din,
+    input            sel, // if sel is low, the clock is divided by 2
     output reg [7:0] dout,
-    output reg [9:0] sound
+    output reg [9:0] sound,  // combined channel output
+    output     [7:0] A,      // linearised channel output
+    output     [7:0] B,
+    output     [7:0] C
 );
 
 reg [7:0] regarray[15:0];
 
 wire [4:0] envelope;
-wire A,B,C;
+wire bitA, bitB, bitC;
 wire noise, envclk;
 reg Amix, Bmix, Cmix;
 
@@ -57,7 +60,7 @@ jt49_div #(12) u_chA(
     .rst_n      ( rst_n         ), 
     .cen        ( cen_ch        ),
     .period     ( {regarray[1][3:0], regarray[0][7:0] } ), 
-    .div        ( A             )
+    .div        ( bitA          )
 );
 
 jt49_div #(12) u_chB( 
@@ -65,7 +68,7 @@ jt49_div #(12) u_chB(
     .rst_n      ( rst_n         ), 
     .cen        ( cen_ch        ),    
     .period     ( {regarray[3][3:0], regarray[2][7:0] } ),   
-    .div        ( B             ) 
+    .div        ( bitB          ) 
 );
 
 jt49_div #(12) u_chC( 
@@ -73,7 +76,7 @@ jt49_div #(12) u_chC(
     .rst_n      ( rst_n         ), 
     .cen        ( cen_ch        ),
     .period     ( {regarray[5][3:0], regarray[4][7:0] } ), 
-    .div        ( C             )
+    .div        ( bitC          )
 );
 
 // the noise uses a x2 faster clock in order to produce a frequency
@@ -110,21 +113,20 @@ jt49_eg u_env(
 );
 
 reg  [4:0] logA, logB, logC;
-wire [7:0] linA, linB, linC;
 
 jt49_exp u_expA(
     .din    ( logA ),
-    .dout   ( linA )
+    .dout   ( A    )
 );
 
 jt49_exp u_expB(
     .din    ( logB ),
-    .dout   ( linB )
+    .dout   ( B    )
 );
 
 jt49_exp u_expC(
     .din    ( logC ),
-    .dout   ( linC )
+    .dout   ( C    )
 );
 
 wire [4:0] volA = { regarray[ 8][3:0], regarray[ 8][3] };
@@ -135,15 +137,15 @@ wire use_envB = regarray[ 9][4];
 wire use_envC = regarray[10][4];
 
 always @(posedge clk) if( clk_en ) begin
-    Amix <= (noise|regarray[7][3]) ^ (A|regarray[7][0]);
-    Bmix <= (noise|regarray[7][4]) ^ (B|regarray[7][1]);
-    Cmix <= (noise|regarray[7][5]) ^ (C|regarray[7][2]);
+    Amix <= (noise|regarray[7][3]) ^ (bitA|regarray[7][0]);
+    Bmix <= (noise|regarray[7][4]) ^ (bitB|regarray[7][1]);
+    Cmix <= (noise|regarray[7][5]) ^ (bitC|regarray[7][2]);
 
     logA <= !Amix ? 5'd0 : (use_envA ? envelope : volA );
     logB <= !Bmix ? 5'd0 : (use_envB ? envelope : volB );
     logC <= !Cmix ? 5'd0 : (use_envC ? envelope : volC );
    
-    sound <= { 2'b0, linA } + { 2'b0, linB } + { 2'b0, linC };
+    sound <= { 2'b0, A } + { 2'b0, B } + { 2'b0, C };
 end
 
 // register array
