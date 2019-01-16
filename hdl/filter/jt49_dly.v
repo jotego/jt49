@@ -37,10 +37,13 @@ reg [depth-1:0] rdpos, wrpos;
 
 // memory
 reg [dw-1:0] ram[0:2**depth-1];
-always @(posedge clk) begin
-    pre_dout <= ram[rdpos];
-    if( cen ) ram[wrpos] <= din;
-end
+always @(posedge clk) 
+    if(rst)
+        pre_dout <= {dw{1'b0}};
+    else begin
+        pre_dout <= ram[rdpos];
+        if( cen ) ram[wrpos] <= din;
+    end
 
 `ifdef SIMULATION
 integer k;
@@ -55,7 +58,6 @@ always @(posedge clk)
         rdpos <= { {depth-1{1'b0}}, 1'b1};
         wrpos <= {depth{1'b1}};
         dout <= {dw{1'b0}};
-        pre_dout <= {dw{1'b0}};
     end else if(cen) begin
         dout <= pre_dout;
         rdpos <= rdpos+1'b1;

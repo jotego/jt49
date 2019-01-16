@@ -21,7 +21,7 @@
 
 // Moving averager
 
-module jt49_mave #(parameter depth=7, dw=8)(
+module jt49_mave #(parameter depth=8, dw=8)(
     input                   clk,
     input                   cen,
     input                   rst,
@@ -44,7 +44,7 @@ jt49_dly #(.depth(depth),.dw(dw)) u_dly0(
 // moving average
 // D=2048 
 reg signed [dw:0] diff;
-reg signed [dw+depth:0] sum;
+reg signed [dw+depth-1:0] sum;
 
 
 always @(posedge clk)
@@ -55,6 +55,6 @@ always @(posedge clk)
         diff <= {1'b0,din } - { 1'b0, dly0 };
         sum  <= { {depth{diff[dw]}}, diff } + sum;
     end
-assign dout = sum[dw+depth:depth+1];
+assign dout = sum[dw+depth-1:depth];
 
 endmodule

@@ -28,30 +28,32 @@ module jt49_dcrm2(
     input                cen,
     input                rst,
     input         [7:0]  din,
-    output reg signed [7:0]  dout
+    output signed [7:0]  dout
 );
 
-localparam dw=1; // widht of the decimal portion
+localparam dw=10; // widht of the decimal portion
 
-reg  signed [7+dw:0] mult, integ, exact, error;
-wire signed [7+dw:0] plus1 = { {8{1'b0}},1'b1};
-reg signed [7+dw:0] dout_ext;
-reg signed [7:0] q;
+reg  signed [8+dw:0] integ, exact, error;
+reg  signed [2*(9+dw)-1:0] mult;
+wire signed [8+dw:0] plus1 = { {8+dw-1{1'b0}},1'b1};
+reg  signed [8:0] pre_dout;
+reg signed [8+dw:0] dout_ext;
+reg signed [8:0] q;
 
 always @(*) begin
     exact = integ+error;
-    q = exact[7+dw:dw];
-    dout  = { 1'b0, din[7:1] } - q;
-    dout_ext = { dout, {dw{1'b0}} };    
-    mult  = ( dout_ext * plus1)>>>(dw*2);
+    q = exact[8+dw:dw];
+    pre_dout  = { 1'b0, din } - q;
+    dout_ext = { pre_dout, {dw{1'b0}} };    
+    mult  = ( dout_ext * plus1)>>>dw;
 end
+
+assign dout = pre_dout[7:0];
 
 always @(posedge clk)
     if( rst ) begin
         integ <= {8+dw{1'b0}};
         error <= {8+dw{1'b0}};
-        mult  <= {8+dw{1'b0}};
-        dout  <= 8'd0;
     end else if( cen ) begin
         integ <= integ + mult;
         error <= exact-{q, {dw{1'b0}}};

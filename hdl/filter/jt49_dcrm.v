@@ -51,6 +51,6 @@ jt49_mave u_mave1(
 
 always @(posedge clk)
     if( cen )
-        dout <= ({1'b0,din} - {ave1[7],ave1})>>>1;
+        dout <= ({1'b0,din} - {ave1,1'b0})>>>1;
 
 endmodule

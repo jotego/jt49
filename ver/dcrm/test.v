@@ -15,23 +15,27 @@ initial begin
     rst = 1'b1;
     #30000 rst=1'b0;
     $display("Reset over: simulation starts");
-    for( simcnt=0; simcnt<500; simcnt=simcnt+1)
+    for( simcnt=0; simcnt<1000; simcnt=simcnt+1)
         #1000_000;
     $finish;
 end
 
 wire signed [7:0] dout;
 
-reg [7:0] din;
+reg [15:0] cnt;
+wire [7:0] din;
 
 always @(posedge clk)
     if( rst ) begin
-        din <= 8'd0;
+        cnt <= 0;
     end else begin
-        din <= din + 8'd1;
+        cnt <= cnt + 1;
     end
 
-jt49_dcrm UUT(
+assign din = cnt[10:3] /* + cnt[3:0]*/;
+// assign din = cnt[7:0];
+
+jt49_dcrm2 UUT(
     .clk  ( clk   ),
     .cen  ( 1'b1  ),
     .rst  ( rst   ),
