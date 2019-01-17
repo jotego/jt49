@@ -23,39 +23,39 @@
 // input is unsigned
 // output is signed
 
-module jt49_dcrm2(
+module jt49_dcrm2 #(parameter sw=8) (
     input                clk,
     input                cen,
     input                rst,
-    input         [7:0]  din,
-    output signed [7:0]  dout
+    input         [sw-1:0]  din,
+    output signed [sw-1:0]  dout
 );
 
 localparam dw=10; // widht of the decimal portion
 
-reg  signed [8+dw:0] integ, exact, error;
-reg  signed [2*(9+dw)-1:0] mult;
-wire signed [8+dw:0] plus1 = { {8+dw-1{1'b0}},1'b1};
-reg  signed [8:0] pre_dout;
-reg signed [8+dw:0] dout_ext;
-reg signed [8:0] q;
+reg  signed [sw+dw:0] integ, exact, error;
+//reg  signed [2*(9+dw)-1:0] mult;
+wire signed [sw+dw:0] plus1 = { {sw+dw{1'b0}},1'b1};
+reg  signed [sw:0] pre_dout;
+reg signed [sw+dw:0] dout_ext;
+reg signed [sw:0] q;
 
 always @(*) begin
     exact = integ+error;
-    q = exact[8+dw:dw];
+    q = exact[sw+dw:dw];
     pre_dout  = { 1'b0, din } - q;
     dout_ext = { pre_dout, {dw{1'b0}} };    
-    mult  = ( dout_ext * plus1)>>>dw;
+    //mult  = dout_ext;
 end
 
-assign dout = pre_dout[7:0];
+assign dout = pre_dout[sw-1:0];
 
 always @(posedge clk)
     if( rst ) begin
-        integ <= {8+dw{1'b0}};
-        error <= {8+dw{1'b0}};
+        integ <= {sw+dw+1{1'b0}};
+        error <= {sw+dw+1{1'b0}};
     end else if( cen ) begin
-        integ <= integ + mult;
+        integ <= integ + pre_dout; //mult[sw+dw*2:dw];
         error <= exact-{q, {dw{1'b0}}};
     end
 

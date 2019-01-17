@@ -32,7 +32,7 @@ always @(posedge clk)
         cnt <= cnt + 1;
     end
 
-assign din = cnt[10:3] /* + cnt[3:0]*/;
+assign din = cnt[10:5]  + cnt[3:0];
 // assign din = cnt[7:0];
 
 jt49_dcrm2 UUT(
