@@ -24,7 +24,7 @@
 module jt49 ( // note that input ports are not multiplexed
     input            rst_n,
     input            clk,    // signal on positive edge
-    input            clk_en,    // clock enable on negative edge
+    input            clk_en /* synthesis direct_enable = 1 */,
     input  [3:0]     addr,
     input            cs_n,
     input            wr_n,  // write
