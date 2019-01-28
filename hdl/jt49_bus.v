@@ -42,6 +42,7 @@ module jt49_bus ( // note that input ports are not multiplexed
 
 reg wr_n, cs_n;
 reg [3:0] addr;
+reg [7:0] din_latch;
 
 always @(posedge clk) 
     if( !rst_n ) begin
@@ -52,7 +53,10 @@ always @(posedge clk)
         case( {bdir,bc1} )
             2'b00: { wr_n, cs_n } <= 2'b11;
             2'b01: { wr_n, cs_n } <= 2'b10;
-            2'b10: { wr_n, cs_n } <= 2'b00;
+            2'b10: begin
+                { wr_n, cs_n } <= 2'b00;
+                din_latch <= din;
+            end
             2'b11: begin
                 { wr_n, cs_n } <= 2'b11;
                 addr <= din[3:0];
@@ -61,19 +65,19 @@ always @(posedge clk)
     end
 
 jt49 u_jt49( // note that input ports are not multiplexed
-    .rst_n  (  rst_n    ),
-    .clk    (  clk      ),    // signal on positive edge
-    .clk_en (  clk_en   ),    // clock enable on negative edge
-    .addr   (  addr     ),
-    .cs_n   (  cs_n     ),
-    .wr_n   (  wr_n     ),  // write
-    .din    (  din      ),
-    .sel    (  sel      ), // if sel is low, the clock is divided by 2
-    .dout   (  dout     ),
-    .sound  (  sound    ),  // combined channel output
-    .A      (  A        ),      // linearised channel output
-    .B      (  B        ),
-    .C      (  C        )
+    .rst_n  (  rst_n     ),
+    .clk    (  clk       ),    // signal on positive edge
+    .clk_en (  clk_en    ),    // clock enable on negative edge
+    .addr   (  addr      ),
+    .cs_n   (  cs_n      ),
+    .wr_n   (  wr_n      ),  // write
+    .din    (  din_latch ),
+    .sel    (  sel       ), // if sel is low, the clock is divided by 2
+    .dout   (  dout      ),
+    .sound  (  sound     ),  // combined channel output
+    .A      (  A         ),      // linearised channel output
+    .B      (  B         ),
+    .C      (  C         )
 );
 
 endmodule // jt49_bus

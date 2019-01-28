@@ -148,6 +148,18 @@ always @(posedge clk) if( clk_en ) begin
     sound <= { 2'b0, A } + { 2'b0, B } + { 2'b0, C };
 end
 
+reg [7:0] read_mask;
+
+always @(*)
+    case(addr)
+        4'h0,4'h2,4'h4,4'h7,4'hb,4'hc,4'he,4'hf:
+            read_mask = 8'hff;
+        4'h1,4'h3,4'h5,4'hd:
+            read_mask = 8'h0f;
+        4'h6,4'h8,4'h9,4'ha: 
+            read_mask = 8'h1f;
+    endcase // addr
+
 // register array
 always @(posedge clk)
     if( !rst_n ) begin
@@ -158,7 +170,7 @@ always @(posedge clk)
         regarray[2]=8'd0; regarray[6]=8'd0; regarray[10]=8'd0; regarray[14]=8'd0;
         regarray[3]=8'd0; regarray[7]=8'd0; regarray[11]=8'd0; regarray[15]=8'd0;
     end else if( !cs_n ) begin
-        dout <= regarray[ addr ];
+        dout <= regarray[ addr ] & read_mask;
         if( !wr_n ) regarray[addr] <= din;
         eg_restart <= addr == 4'hD;
     end
