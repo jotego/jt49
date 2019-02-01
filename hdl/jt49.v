@@ -41,7 +41,7 @@ reg [7:0] regarray[15:0];
 
 wire [4:0] envelope;
 wire bitA, bitB, bitC;
-wire noise, envclk;
+wire noise;
 reg Amix, Bmix, Cmix;
 
 wire cen2, cen4, cen_ch, cen16;
@@ -103,7 +103,7 @@ jt49_div #(16) u_envdiv(
 reg eg_restart;
 
 jt49_eg u_env(
-    .clk    ( envclk            ),
+    .clk    ( clk               ),
     .cen    ( cen_ch            ),
     .step   ( eg_step           ),
     .rst_n  ( rst_n             ),
@@ -165,10 +165,10 @@ always @(posedge clk)
     if( !rst_n ) begin
         dout <= 8'd0;
         eg_restart <= 1'b0;
-        regarray[0]=8'd0; regarray[4]=8'd0; regarray[ 8]=8'd0; regarray[12]=8'd0;
-        regarray[1]=8'd0; regarray[5]=8'd0; regarray[ 9]=8'd0; regarray[13]=8'd0;
-        regarray[2]=8'd0; regarray[6]=8'd0; regarray[10]=8'd0; regarray[14]=8'd0;
-        regarray[3]=8'd0; regarray[7]=8'd0; regarray[11]=8'd0; regarray[15]=8'd0;
+        regarray[0]<=8'd0; regarray[4]<=8'd0; regarray[ 8]<=8'd0; regarray[12]<=8'd0;
+        regarray[1]<=8'd0; regarray[5]<=8'd0; regarray[ 9]<=8'd0; regarray[13]<=8'd0;
+        regarray[2]<=8'd0; regarray[6]<=8'd0; regarray[10]<=8'd0; regarray[14]<=8'd0;
+        regarray[3]<=8'd0; regarray[7]<=8'd0; regarray[11]<=8'd0; regarray[15]<=8'd0;
     end else if( !cs_n ) begin
         dout <= regarray[ addr ] & read_mask;
         if( !wr_n ) regarray[addr] <= din;
