@@ -59,7 +59,7 @@ always @(posedge clk)
             end
             2'b11: begin
                 { wr_n, cs_n } <= 2'b11;
-                addr <= din[3:0];
+                if (din[7:4]==4'd0) addr <= din[3:0];
             end
         endcase // {bdir,bc1}
     end
