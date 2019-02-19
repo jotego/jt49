@@ -37,7 +37,13 @@ module jt49_bus ( // note that input ports are not multiplexed
     output     [9:0] sound,  // combined channel output
     output     [7:0] A,      // linearised channel output
     output     [7:0] B,
-    output     [7:0] C
+    output     [7:0] C,
+
+    input      [7:0] IOA_in,
+    output     [7:0] IOA_out,
+
+    input      [7:0] IOB_in,
+    output     [7:0] IOB_out
 );
 
 reg wr_n, cs_n;
@@ -77,7 +83,11 @@ jt49 u_jt49( // note that input ports are not multiplexed
     .sound  (  sound     ),  // combined channel output
     .A      (  A         ),      // linearised channel output
     .B      (  B         ),
-    .C      (  C         )
+    .C      (  C         ),
+    .IOA_in (  IOA_in    ),
+    .IOA_out(  IOA_out   ),
+    .IOB_in (  IOB_in    ),
+    .IOB_out(  IOB_out   )
 );
 
 endmodule // jt49_bus
