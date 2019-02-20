@@ -34,10 +34,19 @@ module jt49 ( // note that input ports are not multiplexed
     output reg [9:0] sound,  // combined channel output
     output     [7:0] A,      // linearised channel output
     output     [7:0] B,
-    output     [7:0] C
+    output     [7:0] C,
+
+    input      [7:0] IOA_in,
+    output     [7:0] IOA_out,
+
+    input      [7:0] IOB_in,
+    output     [7:0] IOB_out
 );
 
 reg [7:0] regarray[15:0];
+
+assign IOA_out = regarray[14];
+assign IOB_out = regarray[15];
 
 wire [4:0] envelope;
 wire bitA, bitB, bitC;
@@ -171,6 +180,8 @@ always @(posedge clk)
         regarray[3]<=8'd0; regarray[7]<=8'd0; regarray[11]<=8'd0; regarray[15]<=8'd0;
     end else if( !cs_n ) begin
         dout <= regarray[ addr ] & read_mask;
+		  if(addr == 'he && ~regarray[7][6]) dout <= IOA_in;
+		  if(addr == 'hf && ~regarray[7][7]) dout <= IOB_in;
         if( !wr_n ) regarray[addr] <= din;
         eg_restart <= addr == 4'hD;
     end

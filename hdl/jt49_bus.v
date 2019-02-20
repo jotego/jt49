@@ -37,18 +37,24 @@ module jt49_bus ( // note that input ports are not multiplexed
     output     [9:0] sound,  // combined channel output
     output     [7:0] A,      // linearised channel output
     output     [7:0] B,
-    output     [7:0] C
+    output     [7:0] C,
+
+    input      [7:0] IOA_in,
+    output     [7:0] IOA_out,
+
+    input      [7:0] IOB_in,
+    output     [7:0] IOB_out
 );
 
 reg wr_n, cs_n;
-reg [3:0] addr;
+reg [7:0] addr;
 reg [7:0] din_latch;
 
 always @(posedge clk) 
     if( !rst_n ) begin
         wr_n <= 1'b1;
         cs_n <= 1'b1;
-        addr <= 4'd0;
+        addr <= 8'd0;
     end else begin // I/O cannot use clk_en
         case( {bdir,bc1} )
             2'b00: { wr_n, cs_n } <= 2'b11;
@@ -59,7 +65,7 @@ always @(posedge clk)
             end
             2'b11: begin
                 { wr_n, cs_n } <= 2'b11;
-                if (din[7:4]==4'd0) addr <= din[3:0];
+                addr <= din;
             end
         endcase // {bdir,bc1}
     end
@@ -69,7 +75,7 @@ jt49 u_jt49( // note that input ports are not multiplexed
     .clk    (  clk       ),    // signal on positive edge
     .clk_en (  clk_en    ),    // clock enable on negative edge
     .addr   (  addr      ),
-    .cs_n   (  cs_n      ),
+    .cs_n   (  cs_n || addr[7:4] ),
     .wr_n   (  wr_n      ),  // write
     .din    (  din_latch ),
     .sel    (  sel       ), // if sel is low, the clock is divided by 2
@@ -77,7 +83,11 @@ jt49 u_jt49( // note that input ports are not multiplexed
     .sound  (  sound     ),  // combined channel output
     .A      (  A         ),      // linearised channel output
     .B      (  B         ),
-    .C      (  C         )
+    .C      (  C         ),
+    .IOA_in (  IOA_in    ),
+    .IOA_out(  IOA_out   ),
+    .IOB_in (  IOB_in    ),
+    .IOB_out(  IOB_out   )
 );
 
 endmodule // jt49_bus
