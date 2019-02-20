@@ -70,12 +70,14 @@ always @(posedge clk)
         endcase // {bdir,bc1}
     end
 
+wire addr_valid_n = |addr[7:4];
+
 jt49 u_jt49( // note that input ports are not multiplexed
     .rst_n  (  rst_n     ),
     .clk    (  clk       ),    // signal on positive edge
     .clk_en (  clk_en    ),    // clock enable on negative edge
-    .addr   (  addr      ),
-    .cs_n   (  cs_n || addr[7:4] ),
+    .addr   (  addr[3:0] ),
+    .cs_n   (  cs_n || addr_valid_n ),
     .wr_n   (  wr_n      ),  // write
     .din    (  din_latch ),
     .sel    (  sel       ), // if sel is low, the clock is divided by 2
