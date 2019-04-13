@@ -31,7 +31,7 @@ module jt49_dcrm2 #(parameter sw=8) (
     output signed [sw-1:0]  dout
 );
 
-localparam dw=10; // widht of the decimal portion
+localparam dw=10; // width of the decimal portion
 
 reg  signed [sw+dw:0] integ, exact, error;
 //reg  signed [2*(9+dw)-1:0] mult;
