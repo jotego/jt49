@@ -180,8 +180,8 @@ always @(posedge clk)
         regarray[3]<=8'd0; regarray[7]<=8'd0; regarray[11]<=8'd0; regarray[15]<=8'd0;
     end else if( !cs_n ) begin
         dout <= regarray[ addr ] & read_mask;
-        if(addr == 'he && ~regarray[7][6]) dout <= IOA_in;
-        if(addr == 'hf && ~regarray[7][7]) dout <= IOB_in;
+        if(addr == 4'he && !regarray[7][6]) dout <= IOA_in;
+        if(addr == 4'hf && !regarray[7][7]) dout <= IOB_in;
         if( !wr_n ) regarray[addr] <= din;
         eg_restart <= addr == 4'hD;
     end
