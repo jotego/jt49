@@ -37,7 +37,7 @@ wire poly17_zero = poly17==17'b0;
 assign noise=poly17[16];
 wire noise_en;
 
-always @( posedge clk )
+always @( posedge clk, negedge rst_n )
   if( !rst_n ) 
     poly17 <= 17'd0;
   else if( cen&&noise_en )

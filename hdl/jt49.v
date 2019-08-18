@@ -170,7 +170,7 @@ always @(*)
     endcase // addr
 
 // register array
-always @(posedge clk)
+always @(posedge clk, negedge rst_n)
     if( !rst_n ) begin
         dout <= 8'd0;
         eg_restart <= 1'b0;
