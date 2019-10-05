@@ -37,9 +37,13 @@ reg  wr_n;
 reg [11:0] cmd_list [0:63];
 integer cmd_cnt, cmd_wait, cmd_end=63;
 
-initial begin
+initial begin : cmd_set
+    integer cnt;
+    for(cnt=0;cnt<64;cnt=cnt+1)
+        cmd_list[cnt] = {4'hf,8'hff}; // wait
+
     cmd_list[ 0] = { 4'h0, 8'h11 };
-    cmd_list[ 1] = { 4'h1, 8'h01 };  // set ch A freq 
+    cmd_list[ 1] = { 4'h1, 8'h02 };  // set ch A freq 
     cmd_list[ 2] = { 4'h2, 8'h22 };
     cmd_list[ 3] = { 4'h3, 8'h02 };  // set ch B freq 
     cmd_list[ 4] = { 4'h4, 8'h23 };
@@ -49,10 +53,17 @@ initial begin
     cmd_list[ 7] = { 4'h0, 8'h00 };
     cmd_list[ 8] = { 4'h1, 8'h00 };  // stop ch A freq 
     cmd_list[ 9] = { 4'h7, 8'h31 };  // A = noise
-    cmd_list[10] = { 4'h6, 8'h01 };  // noise freq
+    cmd_list[10] = { 4'h6, 8'h03 };  // noise freq
     cmd_list[11] = { 4'hf, 8'hff };  // wait
 
-    cmd_list[12] = { 4'he, 8'hff };  // end
+    // envelope
+    cmd_list[12] = { 4'hd, 8'h0e };  // zig zag
+    cmd_list[13] = { 4'hc, 8'h00 };  // freq. of envelope
+    cmd_list[14] = { 4'hb, 8'h09 };  // freq. of envelope
+    cmd_list[15] = { 4'h8, 8'h10 };  // ch A controlled by eg
+    cmd_list[16] = { 4'hf, 8'hff };  // wait
+
+    cmd_list[19] = { 4'he, 8'hff };  // end
 end
 
 always @(posedge clk)
