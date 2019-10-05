@@ -59,11 +59,23 @@ initial begin : cmd_set
     // envelope
     cmd_list[12] = { 4'hd, 8'h0e };  // zig zag
     cmd_list[13] = { 4'hc, 8'h00 };  // freq. of envelope
-    cmd_list[14] = { 4'hb, 8'h09 };  // freq. of envelope
+    cmd_list[14] = { 4'hb, 8'h03 };  // freq. of envelope
     cmd_list[15] = { 4'h8, 8'h10 };  // ch A controlled by eg
-    cmd_list[16] = { 4'hf, 8'hff };  // wait
 
-    cmd_list[19] = { 4'he, 8'hff };  // end
+    cmd_list[17] = { 4'hd, 8'b0_000 };
+    cmd_list[19] = { 4'hd, 8'b0_100 };
+
+    cmd_list[21] = { 4'hd, 8'b1_000 };
+    cmd_list[23] = { 4'hd, 8'b1_001 };
+    cmd_list[25] = { 4'hd, 8'b1_010 };
+    cmd_list[27] = { 4'hd, 8'b1_011 };
+
+    cmd_list[29] = { 4'hd, 8'b1_100 };
+    cmd_list[31] = { 4'hd, 8'b1_101 };
+    cmd_list[33] = { 4'hd, 8'b1_110 };
+    cmd_list[35] = { 4'hd, 8'b1_111 };
+
+    cmd_list[37] = { 4'he, 8'hff };  // end
 end
 
 always @(posedge clk)
@@ -73,27 +85,29 @@ always @(posedge clk)
         cmd_cnt  <= 0;
         cmd_wait <= 0;
     end
-    else if( cmd_cnt!=cmd_end || cmd_wait != 0) begin
-        if( cmd_wait == 0 ) begin
-            if( cmd_list[cmd_cnt][11:8]== 4'hf ) begin
-                cmd_wait <= cmd_list[cmd_cnt][7:0] << 8;
-            end
-            else if( cmd_list[cmd_cnt][11:8]== 4'he ) begin
-                $display("Simulation finished through command\n");
-                $finish;
+    else begin
+        wr_n <= 1'b1;
+        if( cmd_cnt!=cmd_end || cmd_wait != 0) begin
+            if( cmd_wait == 0 ) begin
+                if( cmd_list[cmd_cnt][11:8]== 4'hf ) begin
+                    cmd_wait <= cmd_list[cmd_cnt][7:0] << 8;
+                end
+                else if( cmd_list[cmd_cnt][11:8]== 4'he ) begin
+                    $display("Simulation finished through command\n");
+                    $finish;
+                end
+                else begin
+                    addr <= cmd_list[cmd_cnt][11:8];
+                    data_in <= cmd_list[cmd_cnt][7:0];
+                    wr_n <= 1'b0;
+                end
+                cmd_cnt <= cmd_cnt + 1;
             end
             else begin
-                addr <= cmd_list[cmd_cnt][11:8];
-                data_in <= cmd_list[cmd_cnt][7:0];
-                wr_n <= 1'b0;
+                cmd_wait <= cmd_wait-1;
             end
-            cmd_cnt <= cmd_cnt + 1;
-        end
-        else begin
-            cmd_wait <= cmd_wait-1;
         end
     end
-
 
 jt49 uut( // note that input ports are not multiplexed
     .rst_n      ( rst_n     ),
