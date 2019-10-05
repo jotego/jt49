@@ -42,7 +42,7 @@ initial begin : cmd_set
     for(cnt=0;cnt<64;cnt=cnt+1)
         cmd_list[cnt] = {4'hf,8'hff}; // wait
 
-    cmd_list[ 0] = { 4'h0, 8'h02 };
+    cmd_list[ 0] = { 4'h0, 8'h01 };
     cmd_list[ 1] = { 4'h1, 8'h00 };  // set ch A freq 
     cmd_list[ 2] = { 4'h2, 8'h22 };
     cmd_list[ 3] = { 4'h3, 8'h02 };  // set ch B freq 
@@ -58,8 +58,8 @@ initial begin : cmd_set
 
     // envelope
     cmd_list[12] = { 4'hd, 8'h0e };  // zig zag
-    cmd_list[13] = { 4'hc, 8'h00 };  // freq. of envelope
-    cmd_list[14] = { 4'hb, 8'h03 };  // freq. of envelope
+    cmd_list[13] = { 4'hc, 8'h00 };  // freq. of envelope MSB
+    cmd_list[14] = { 4'hb, 8'h00 };  // freq. of envelope LSB
     cmd_list[15] = { 4'h8, 8'h10 };  // ch A controlled by eg
 
     cmd_list[17] = { 4'hd, 8'b0_000 };

@@ -101,25 +101,28 @@ jt49_noise u_ng(
 
 // envelope generator
 wire eg_step;
+wire [15:0] eg_period   = {regarray[4'hc],regarray[4'hb]};
+wire        null_period = eg_period == 16'h0;
 
 jt49_div #(16) u_envdiv( 
     .clk    ( clk               ), 
     .cen    ( cen256            ),
     .rst_n  ( rst_n             ),
-    .period ({regarray[4'hc],regarray[4'hb]}), 
+    .period ( eg_period         ), 
     .div    ( eg_step           ) 
 );  
 
 reg eg_restart;
 
 jt49_eg u_env(
-    .clk    ( clk               ),
-    .cen    ( cen16             ),
-    .step   ( eg_step           ),
-    .rst_n  ( rst_n             ),
-    .restart( eg_restart        ),
-    .ctrl   ( regarray[4'hD][3:0] ),
-    .env    ( envelope          )
+    .clk        ( clk               ),
+    .cen        ( cen256            ),
+    .step       ( eg_step           ),
+    .rst_n      ( rst_n             ),
+    .restart    ( eg_restart        ),
+    .null_period( null_period       ),
+    .ctrl       ( regarray[4'hD][3:0] ),
+    .env        ( envelope          )
 );
 
 reg  [4:0] logA, logB, logC;
@@ -200,7 +203,7 @@ always @(posedge clk, negedge rst_n)
 always @(posedge clk, negedge rst_n)
     if( !rst_n ) begin
         eg_restart <= 1'b0;
-    end else if(cen16) begin
+    end else if(cen256) begin
         eg_restart <= eg_rst_rq;
     end
 

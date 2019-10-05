@@ -40,7 +40,7 @@ always @(posedge clk, negedge rst_n ) begin
     div   <= 1'b0;
   end
   else if(cen) begin
-    if( count >= period ) begin
+    if( count>=period ) begin
         count <= one;
         div   <= ~div;
     end
