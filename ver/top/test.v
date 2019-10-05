@@ -42,8 +42,8 @@ initial begin : cmd_set
     for(cnt=0;cnt<64;cnt=cnt+1)
         cmd_list[cnt] = {4'hf,8'hff}; // wait
 
-    cmd_list[ 0] = { 4'h0, 8'h11 };
-    cmd_list[ 1] = { 4'h1, 8'h02 };  // set ch A freq 
+    cmd_list[ 0] = { 4'h0, 8'h02 };
+    cmd_list[ 1] = { 4'h1, 8'h00 };  // set ch A freq 
     cmd_list[ 2] = { 4'h2, 8'h22 };
     cmd_list[ 3] = { 4'h3, 8'h02 };  // set ch B freq 
     cmd_list[ 4] = { 4'h4, 8'h23 };
