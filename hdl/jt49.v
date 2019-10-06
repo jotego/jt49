@@ -89,8 +89,6 @@ jt49_div #(12) u_chC(
     .div        ( bitC          )
 );
 
-// the noise uses a x2 faster clock in order to produce a frequency
-// of Fclk/16 when period is 1
 jt49_noise u_ng( 
     .clk    ( clk               ), 
     .cen    ( cen16             ),
