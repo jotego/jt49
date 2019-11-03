@@ -31,7 +31,8 @@ module jt49_cen(
 );
 
 reg [9:0] cencnt;
-localparam eg = 3; //8;
+parameter CLKDIV = 3; // use 3 for standalone JT49 or 2
+localparam eg = CLKDIV; //8;
 
 always @(negedge clk, negedge rst_n) begin
     if(!rst_n)
@@ -46,8 +47,8 @@ always @(negedge clk) begin
     cen256 <= cen & toggle256;
 end
 
-wire toggle16 = sel ? cencnt[2:0]==3'd0 : cencnt[3:0]==4'd0;
-wire toggle256= sel ? cencnt[eg-2:0]==7'd0 : cencnt[eg-1:0]==8'd0;
+wire toggle16 = sel ? !cencnt[CLKDIV-1:0] : !cencnt[CLKDIV:0];
+wire toggle256= sel ? !cencnt[eg-2:0]     : !cencnt[eg-1:0];
 
 
 endmodule // jt49_cen

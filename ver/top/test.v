@@ -82,7 +82,7 @@ initial begin : cmd_set
     cmd_list[35] = { 4'hd, 8'b1_111 };
 
     cmd_list[36] = { 4'h7, ~8'h1 }; // Only output channel A
-    cmd_list[37] = { 4'h1, 8'h10 };  // stop ch A freq 
+    cmd_list[37] = { 4'h0, 8'h10 }; // ch A freq 
     cmd_list[36+2] = { 4'h8, 8'hf };
     cmd_list[37+2] = { 4'hf, 8'h40};
     cmd_list[38+2] = { 4'h8, 8'he };
