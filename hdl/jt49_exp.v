@@ -42,7 +42,7 @@ always @(posedge clk)
     dout <= lut[ {comp,din} ];
 
 initial begin
-    lut[0] = 8'd1;
+    lut[0] = 8'd0;
     lut[1] = 8'd1;
     lut[2] = 8'd1;
     lut[3] = 8'd1;
@@ -74,7 +74,7 @@ initial begin
     lut[29] = 8'd180;
     lut[30] = 8'd214;
     lut[31] = 8'd255;
-    lut[32] = 8'd7;
+    lut[32] = 8'd0;
     lut[33] = 8'd7;
     lut[34] = 8'd8;
     lut[35] = 8'd10;
@@ -106,7 +106,7 @@ initial begin
     lut[61] = 8'd202;
     lut[62] = 8'd227;
     lut[63] = 8'd255;
-    lut[64] = 8'd17;
+    lut[64] = 8'd0;
     lut[65] = 8'd18;
     lut[66] = 8'd20;
     lut[67] = 8'd22;
@@ -138,7 +138,7 @@ initial begin
     lut[93] = 8'd214;
     lut[94] = 8'd233;
     lut[95] = 8'd255;
-    lut[96] = 8'd48;
+    lut[96] = 8'd0;
     lut[97] = 8'd51;
     lut[98] = 8'd54;
     lut[99] = 8'd57;
@@ -170,5 +170,6 @@ initial begin
     lut[125] = 8'd229;
     lut[126] = 8'd241;
     lut[127] = 8'd255;
+
 end
 endmodule
