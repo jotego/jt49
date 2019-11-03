@@ -18,7 +18,6 @@ There are two top level files you can use:
 The resistor load had an effect of gain compression on the chip. There is a paremeter called **COMP** which can be used to model this effect. You can assign a value from 0 to 3.
 
 Value | Dynamic Range | Equivalent resistor  
--------------------------------------------
  0    |  43.6 dB      | <1000 Ohm  
  1    |  29.1 dB      | ~8000 Ohm  
  2    |  21.8 dB      | ~40  kOhm (?)  
