@@ -15,7 +15,7 @@ There are two top level files you can use:
 
 ## Resistor Load Modelling
 
-The resistor load had an effect of gain compression on the chip. There is a paremeter called **COMP** which can be used to model this effect. You can assign a value from 0 to 3.
+The resistor load had an effect of gain compression on the chip. There is a parameter called **COMP** which can be used to model this effect. You can assign a value from 0 to 3.
 
 Value | Dynamic Range | Equivalent resistor  
 ------|---------------|--------------------
