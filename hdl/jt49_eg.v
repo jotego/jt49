@@ -45,8 +45,8 @@ wire will_hold = !CONT || HOLD;
 always @(posedge clk)
     if( cen ) env <= inv ? ~gain : gain;
 
-wire step_edge = (step && !last_step) || null_period;
 reg  last_step;
+wire step_edge = (step && !last_step) || null_period;
 wire will_invert = (!CONT&&ATT) || (CONT&&ALT);
 
 always @( posedge clk, negedge rst_n )
