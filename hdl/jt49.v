@@ -32,9 +32,9 @@ module jt49 ( // note that input ports are not multiplexed
     input            sel, // if sel is low, the clock is divided by 2
     output reg [7:0] dout,
     output reg [9:0] sound,  // combined channel output
-    output     [7:0] A,      // linearised channel output
-    output     [7:0] B,
-    output     [7:0] C,
+    output reg [7:0] A,      // linearised channel output
+    output reg [7:0] B,
+    output reg [7:0] C,
 
     input      [7:0] IOA_in,
     output     [7:0] IOA_out,
@@ -175,12 +175,16 @@ always @(posedge clk, negedge rst_n) begin
                 sound <= acc;
             end
             4'b0010: begin
+                A   <= lin;
                 log <= logB;
             end
             4'b0100: begin
+                B   <= lin;
                 log <= logC;
             end
-            4'b1000:; // last sum
+            4'b1000: begin // last sum
+                C   <= lin;
+            end
         endcase
     end
 end
