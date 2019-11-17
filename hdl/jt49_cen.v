@@ -30,8 +30,8 @@ module jt49_cen(
     output  reg cen256
 );
 
-wire toggle16 = sel ? !cencnt[CLKDIV-1:0] : !cencnt[CLKDIV:0];
-wire toggle256= sel ? !cencnt[eg-2:0]     : !cencnt[eg-1:0];
+wire toggle16 = sel ? ~|cencnt[CLKDIV-1:0] : ~|cencnt[CLKDIV:0];
+wire toggle256= sel ? ~|cencnt[eg-2:0]     : ~|cencnt[eg-1:0];
 
 reg [9:0] cencnt;
 parameter CLKDIV = 3; // use 3 for standalone JT49 or 2

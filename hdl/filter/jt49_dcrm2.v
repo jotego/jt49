@@ -55,7 +55,9 @@ always @(posedge clk)
         integ <= {sw+dw+1{1'b0}};
         error <= {sw+dw+1{1'b0}};
     end else if( cen ) begin
+        /* verilator lint_off WIDTH */
         integ <= integ + pre_dout; //mult[sw+dw*2:dw];
+        /* verilator lint_on WIDTH */
         error <= exact-{q, {dw{1'b0}}};
     end
 

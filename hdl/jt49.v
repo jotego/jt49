@@ -185,6 +185,7 @@ always @(posedge clk, negedge rst_n) begin
             4'b1000: begin // last sum
                 C   <= lin;
             end
+            default:;
         endcase
     end
 end
