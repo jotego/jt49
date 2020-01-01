@@ -37,7 +37,7 @@ reg [9:0] cencnt;
 parameter CLKDIV = 3; // use 3 for standalone JT49 or 2
 localparam eg = CLKDIV; //8;
 
-always @(negedge clk, negedge rst_n) begin
+always @(posedge clk, negedge rst_n) begin
     if(!rst_n)
         cencnt <= 10'd0;
     else begin 
@@ -45,7 +45,7 @@ always @(negedge clk, negedge rst_n) begin
     end
 end
 
-always @(negedge clk) begin
+always @(posedge clk) begin
     cen16  <= cen & toggle16;
     cen256 <= cen & toggle256;
 end
