@@ -150,9 +150,9 @@ wire use_noC  = regarray[ 7][5];
 reg [3:0] acc_st;
 
 always @(posedge clk) if( clk_en ) begin
-    Amix <= (noise|regarray[7][3]) & (bitA|regarray[7][0]);
-    Bmix <= (noise|regarray[7][4]) & (bitB|regarray[7][1]);
-    Cmix <= (noise|regarray[7][5]) & (bitC|regarray[7][2]);
+    Amix <= (noise|use_noA) & (bitA|regarray[7][0]);
+    Bmix <= (noise|use_noB) & (bitB|regarray[7][1]);
+    Cmix <= (noise|use_noC) & (bitC|regarray[7][2]);
 
     logA <= !Amix ? 5'd0 : (use_envA ? envelope : volA );
     logB <= !Bmix ? 5'd0 : (use_envB ? envelope : volB );
