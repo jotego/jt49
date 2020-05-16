@@ -1,0 +1,9 @@
+period a,0
+period b,1
+period c,0xFFF
+period no,0
+vol a, 1
+vol b, 2
+vol c, 4
+wait 20
+finish

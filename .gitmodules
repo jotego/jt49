@@ -1,0 +1,3 @@
+[submodule "doc/sch"]
+	path = doc/sch
+	url = https://github.com/lvd2/ay-3-8910_reverse_engineered.git
