@@ -8,8 +8,17 @@ wire [7:0] da, ioa, iob;
 reg  [7:0] din;
 
 assign da = bdir ? din : 8'hzz;
-pullup pullups( {ioa,iob} );
-pullup pullupda( da );
+
+genvar i;
+
+generate
+    for( i=0; i<8; i=i+1) begin
+        pullup pullup_ioa( ioa[i] );
+        pullup pullup_iob( iob[i] );
+        pullup pullupda  ( da [i] );
+    end
+endgenerate
+
 
 initial begin
     rstn = 0;
@@ -27,21 +36,27 @@ reg [9:0] cmdmem[0:4095];
 wire [9:0] nextcmd = cmdmem[cntcmd];
 
 initial begin
-    $readmemh(cmdmem,"cmd.hex");
+    $readmemh("cmd.hex",cmdmem);
 end
 
 always @(posedge clk) begin
     if( cntwait>0 ) begin
         cntwait <= cntwait-1;
-        bc1     <= 1;
+        bc1     <= 0;
+        bdir    <= 0;
     end else begin
         casez( nextcmd[9:8] )
             2'b0?: begin
+                bdir    <= 1;
                 bc1     <= nextcmd[8];
                 din     <= cmdmem[cntcmd][7:0];
                 cntwait <= 8;
             end
-            2'b10: cntwait <= { nextcmd[7:0], 4'd0 };
+            2'b10: begin
+                bdir <= 0;
+                bc1  <= 0;
+                cntwait <= { nextcmd[7:0], 8'd0 };
+            end
             2'b11: $finish;
         endcase
         cntcmd <= cntcmd+1;
@@ -128,8 +143,8 @@ ay_model u_model
 );
 
 initial begin
-    $dumpfile("test.lxt");
-    $dumpvars;
+    $shm_open("test.shm");
+    $shm_probe(test,"AS");
     $dumpon;
     #(10*16*256*256*128) 
     $display("WARNING: simulation too long");

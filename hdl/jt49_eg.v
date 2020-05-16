@@ -48,29 +48,40 @@ always @(posedge clk)
 reg  last_step;
 wire step_edge = (step && !last_step) || null_period;
 wire will_invert = (!CONT&&ATT) || (CONT&&ALT);
+reg  rst_latch, rst_clr;
+
+always @(posedge clk) begin
+    if( restart ) rst_latch <= 1;
+    else if(rst_clr ) rst_latch <= 0;
+end
 
 always @( posedge clk, negedge rst_n )
     if( !rst_n) begin
-        gain  <= 5'h1F;
-        inv   <= 1'b0;
-        stop  <= 1'b0;
+        gain    <= 5'h1F;
+        inv     <= 0;
+        stop    <= 0;
+        rst_clr <= 0;
     end
     else if( cen ) begin
         last_step <= step;
-        if( restart ) begin
-            gain  <= 5'h1F;
-            inv   <= ATT;
-            stop  <= 1'b0;
+        if( rst_latch ) begin
+            gain    <= 5'h1F;
+            inv     <= ATT;
+            stop    <= 1'b0;
+            rst_clr <= 1;
         end
-        else if (step_edge && !stop) begin
-            if( gain==5'h00 ) begin
-                if( will_hold )
-                    stop <= 1'b1;
-                else
-                    gain <= gain-5'b1;
-                if( will_invert ) inv<=~inv;
+        else begin
+            rst_clr <= 0;
+            if (step_edge && !stop) begin
+                if( gain==5'h00 ) begin
+                    if( will_hold )
+                        stop <= 1'b1;
+                    else
+                        gain <= gain-5'b1;
+                    if( will_invert ) inv<=~inv;
+                end
+                else gain <= gain-5'b1;
             end
-            else gain <= gain-5'b1;
         end
     end
 

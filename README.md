@@ -54,6 +54,17 @@ IOA_in   | output    | 8     | I/O port A, output side
 IOB_in   | input     | 8     | I/O port B, input side
 IOB_in   | output    | 8     | I/O port B, output side
 
+## Comparison with AY-3-8910 Verilog Model
+
+A simulation test bench of jt49 vs the AY-3-8910 model (available in the doc folder via a git submodule) is available in folder ver/comp. The simulation uses a simple text file to enter arbitrary commands (test_cmd). The command file is converted to hexadecimal by parser.awk and used in simulation. The following parameters were tested:
+
+Item                 |  Compliance      | Remarks
+---------------------|------------------|-------------------------------
+channel period       |  Yes             | Tested: 0, 1 and FFFF values
+noise period         |  Yes             | Tested: 0, 7 and 1F values
+envelope shape       |  Yes             | Tested all 16 shapes
+envelope period      |  Yes             | Tested 0 and FFF values
+
 ## Resistor Load Modelling
 
 The resistor load had an effect of gain compression on the chip. There is a parameter called **COMP** which can be used to model this effect. You can assign a value from 0 to 3.

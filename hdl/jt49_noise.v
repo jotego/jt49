@@ -28,17 +28,20 @@ module jt49_noise(
     input       clk,
     input       rst_n,
     input [4:0] period,
-    output      noise
+    output reg  noise
 );
 
 reg [5:0]count;
 reg [16:0]poly17;
 wire poly17_zero = poly17==17'b0;
-assign noise=poly17[0];
 wire noise_en;
 reg last_en;
 
 wire noise_up = noise_en && !last_en;
+
+always @(posedge clk ) if(cen) begin
+    noise <= ~poly17[0];
+end
 
 always @( posedge clk, negedge rst_n )
   if( !rst_n ) 

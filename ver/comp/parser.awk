@@ -8,7 +8,7 @@ function add_cmd(val) {
     cnt=cnt+1
 }
 function validate_ch(c) {
-    if( ch!="a" && ch!="b" && ch!="c" && ch!="no" ) {
+    if( ch!="a" && ch!="b" && ch!="c" && ch!="no" && ch!="env" ) {
         print "ERROR: bad channel at line " FNR ". Used '" ch "'" > "/dev/stderr"
         exit 1
     }
@@ -45,19 +45,30 @@ function validate_arg(val,min,max) {
     else if( ch=="b" ) ch=2
     else if( ch=="c" ) ch=4
     else if( ch=="no") ch=6
-    if( ch<6 ) {
+    else if( ch=="env") ch=013
+    if( ch<6 || ch==013) {
         lsb=val%256
         msb=(val-lsb)/256
-        validate_arg( val, 0, 0xfff )        
+        if( ch==6   ) validate_arg( val, 0, 0xfff  )
+        if( ch==013 ) validate_arg( val, 0, 0xffff )
         add_cmd( 0x100 + ch ) # address
         add_cmd( lsb )
         add_cmd( 0x100 + ch +1 ) # address
         add_cmd( msb )
-    } else { # Noise
+    } else if(ch==6) { # Noise
         lsb=val%32
         add_cmd( 0x100 + ch ) # address
         add_cmd( lsb )    
     }
+    next
+}
+/shape/ {
+    allargs=substr($0,6)
+    gsub(" ", "", allargs)
+    val=strtonum(allargs)
+    validate_arg( val, 0, 0xf)
+    add_cmd(0x100+015 ) # Octal!
+    add_cmd(val)
     next
 }
 /^#/ {
