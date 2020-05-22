@@ -12,6 +12,8 @@ YM2149 compatible Verilog core, with emphasis on FPGA implementation as part of 
 There are two top level files you can use:
  - **jt49_bus**: presents the expected AY-3-8910 interface
  - **jt49**: presents a simplified interface, ideal to embed. This is the one used by jt12
+
+clk_en cannot be set to 1 for correct operation. The design assumes that there will be at least one empty clock cycle between every two clk_en high clock cycles.
  
 ## Port Description jt49
 

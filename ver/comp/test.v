@@ -26,10 +26,15 @@ initial begin
     #100 rstn = 1;
 end
 
+reg cen;
+
 initial begin
     clk = 0;
-    forever #2.85 clk=~clk; // 1.75MHz
+    cen = 0;
+    forever #(2.85/2) clk=~clk; // 1.75MHz
 end
+
+always @(posedge clk) cen<=~cen;
 
 integer cntwait=10, cntcmd=0;
 reg [9:0] cmdmem[0:4095];
@@ -67,7 +72,7 @@ end
 jt49_bus uut( // note that input ports are not multiplexed
     .rst_n      ( rstn          ),
     .clk        ( clk           ),    // signal on positive edge
-    .clk_en     ( 1'b1          ) /* synthesis direct_enable = 1 */,
+    .clk_en     ( cen           ) /* synthesis direct_enable = 1 */,
     // bus control pins of original chip
     .bdir       ( bdir          ),
     .bc1        ( bc1           ),

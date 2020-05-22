@@ -26,9 +26,9 @@ function validate_arg(val,min,max) {
     ch=cmdargs[1]
     val=strtonum(cmdargs[2])
     validate_ch(ch)
-    if( ch=="a" ) ch=10
-    else if( ch=="b" ) ch=11
-    else if( ch=="c" ) ch=12
+    if( ch=="a" ) ch=8
+    else if( ch=="b" ) ch=9
+    else if( ch=="c" ) ch=10
     validate_arg( val, 0, 0x1f )
     add_cmd( 0x100 + ch ) # address
     add_cmd( val )
