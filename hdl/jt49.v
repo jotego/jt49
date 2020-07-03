@@ -165,6 +165,10 @@ always @(posedge clk, negedge rst_n) begin
     if( !rst_n ) begin
         acc_st <= 4'b1;
         acc    <= 10'd0;
+        A      <= 8'd0;
+        B      <= 8'd0;
+        C      <= 8'd0;
+        sound  <= 10'd0;
     end else if(clk_en) begin
         acc_st <= { acc_st[2:0], acc_st[3] };
         acc <= acc + {2'b0,lin};
