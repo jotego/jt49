@@ -35,6 +35,7 @@ module jt49 ( // note that input ports are not multiplexed
     output reg [7:0] A,      // linearised channel output
     output reg [7:0] B,
     output reg [7:0] C,
+    output           sample,
 
     input      [7:0] IOA_in,
     output     [7:0] IOA_out,
@@ -61,6 +62,7 @@ assign IOA_out = regarray[14];
 assign IOB_out = regarray[15];
 assign port_A  = !regarray[7][6] ? IOA_in : IOA_out;
 assign port_B  = !regarray[7][7] ? IOB_in : IOB_out;
+assign sample  = cen16;
 
 jt49_cen #(.CLKDIV(CLKDIV)) u_cen(
     .clk    ( clk     ),
