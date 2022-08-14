@@ -1,11 +1,16 @@
 # JT49 FPGA Clone of YM2149 hardware by Jose Tejada (@topapate)
 
 You can show your appreciation through
-* [Patreon](https://patreon.com/topapate), by supporting releases
-* [Paypal](https://paypal.me/topapate), with a donation
 
+* [Patreon](https://patreon.com/topapate), by supporting open source retro releases
 
 YM2149 compatible Verilog core, with emphasis on FPGA implementation as part of JT12 in order to recreate the YM2203 part.
+
+## Documentation
+
+- [AY-3-8910 Data Manual](https://archive.org/details/AY-3-8910-8912_Feb-1979/page/n51/mode/2up)
+- [AY-3-8919 Reverse Engineered](https://github.com/lvd2/ay-3-8910_reverse_engineered)
+- [YM2149](https://archive.org/details/bitsavers_yamahaYM21_3070829)
 
 ## Usage
 
@@ -15,6 +20,13 @@ There are two top level files you can use:
 
 clk_en cannot be set to 1 for correct operation. The design assumes that there will be at least one empty clock cycle between every two clk_en high clock cycles.
  
+## Files for Simulation and Synthesis
+
+When used inside a [JTFRAME](https://github.com/jotego/jtframe) project, you can use the [yaml](hdl/jt49.yaml) file provided. If you are using this repository on its own, there is a [qip](syn/quartus/jt49.qip) for Intel Quartus available.
+
+It is recommended to use this repository as a [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) in your project.
+
+
 ## Port Description jt49
 
 Name     | Direction | Width | Purpose
