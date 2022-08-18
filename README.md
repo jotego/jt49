@@ -2,7 +2,7 @@
 
 You can show your appreciation through
 
-* [Patreon](https://patreon.com/topapate), by supporting open source retro releases
+* [Patreon](https://patreon.com/jotego), by supporting open source retro releases
 
 YM2149 compatible Verilog core, with emphasis on FPGA implementation as part of JT12 in order to recreate the YM2203 part.
 
