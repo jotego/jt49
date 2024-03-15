@@ -44,59 +44,43 @@ Run the program for each of these configurations:
 
 */
 
-const int CLKPIN=9, A0PIN=11, WRPIN=12, ICPIN=13;
+const int A0PIN=8, WRPIN=9, ICPIN=10;
 
 void setup() {
 	// Set Pins 2-12 as an output
-	for (int pin = 2; pin <= 13; pin++) {
-		pinMode(pin, OUTPUT);
-	}
-	digitalWrite(ICPIN,0);
-	// set a 2MHz frequency at pin 9 (CLKPIN)
-	noInterrupts();
-	// Set Timer1 in Fast PWM mode with the top in ICR1
-	TCCR1A = 0;
-	TCCR1A |= (1 << COM1A0);  // Toggle OC1A on Compare Match
-	TCCR1A |= (1 << WGM11);   // Mode 14 Fast PWM
-	TCCR1B = 0;
-	TCCR1B |= (1 << WGM12) | (1 << WGM13); // Mode 14 Fast PWM
-	TCCR1B |= (1 << CS11);    // Set prescaler to 8
-	// Set ICR1 to value for 2MHz frequency
-	ICR1 = 3;  // With a 16MHz clock and prescaler of 8, this yields a frequency close to 2MHz
-	interrupts();
+	DDRD=0xff;
+	DDRB=0xff;
+	// pinMode(A0PIN, OUTPUT);
+	// pinMode(WRPIN, OUTPUT);
+	// pinMode(ICPIN, OUTPUT);
 	// PSG
 	psg_setup();
-	Serial.begin(9600);
+	// Serial.begin(9600);
 }
 
 void wrDout(int v) {
-	for( int pin=2; pin<11; pin++ ) {
-		if( pin==CLKPIN ) continue;
-		digitalWrite(pin,v&1);
-		v>>=1;
-	}
-	digitalWrite(WRPIN,1);
-	digitalWrite(WRPIN,0);
-	digitalWrite(WRPIN,1);
+	PORTD=v&0xff;
+	PORTB=PINB&0xfd; // WR low
+	PORTB=PINB|0x02; // WR high
 }
 
 void wrReg( int r, int v) {
-	digitalWrite(A0PIN,0);
+	PORTB=0xfe; // A0 low
 	wrDout(r);
-	digitalWrite(A0PIN,1);
-	wrDout(r);
+	PORTB=0xff; // A0 hihg
+	wrDout(v);
 }
 
 void psg_setup() {
 	// reset
 	digitalWrite(ICPIN,0);
-	delay(10);
+	delay(100);
 	digitalWrite(ICPIN,1);
-	delay(10);
+	delay(100);
 
-	for(int k=0;k<3;k++) { // set minimum freq for all channels
+	for(int k=0;k<6;k+=2) { // set minimum freq for all channels
 		wrReg(0+k,0xff);
-		wrReg(1+k,0x0f);
+		wrReg(1+k,0x0);
 	}
 	wrReg(7, 7<<3 ); // tone enable
 	wrReg(11, 0 );   // fast envelope
@@ -104,7 +88,12 @@ void psg_setup() {
 	wrReg(13, 13 ); // envelope held high
 }
 
+// void loop() {
+// 	for(int k=0;;k++) PORTD=k&0xff;
+// }
+
 void loop() {
+	psg_setup();
 	int vol[3]={0,0,0};
 	char str[64];
 	for(int ch=0;ch<3;ch++) {
@@ -113,10 +102,10 @@ void loop() {
 			wrReg( 8,vol[0]);
 			wrReg( 9,vol[1]);
 			wrReg(10,vol[2]);
-			delay(10);
+			delay(50);
 			int amp = analogRead(A0);
 			sprintf(str,"%d,%d,%d,%04d",vol[0],vol[1],vol[2],amp);
-			Serial.println(str);
+			// Serial.println(str);
 		}
 	}
 }
