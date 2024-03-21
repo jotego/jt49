@@ -97,14 +97,16 @@ envelope period      |  Yes             | Tested 0 and FFF values
 
 ## Resistor Load Modelling
 
-The resistor load had an effect of gain compression on the chip. There is a parameter called **COMP** which can be used to model this effect. You can assign a value from 0 to 3.
+The YM2149 was used to measure the output circuitry. According to AY-3-8910 schematics, there are 16 NMOS devices for each channel. Depending on the amplitude settings, only one of them will be active. These numbers render values that agree with the datasheet and measurements:
 
-Value | Dynamic Range | Equivalent resistor  
-------|---------------|--------------------
- 0    |  43.6 dB      | <1000 Ohm  
- 1    |  29.1 dB      | ~8000 Ohm  
- 2    |  21.8 dB      | ~40  kOhm (?)  
- 3    |  13.4 dB      | ~99  kOhm  
+- Rload = 1 kOhm
+- Smallest Ron = 900 Ohm (for level=15)
+- Largest Roff = 3 MOhm (for level=0)
+- Scale factor from one MOS to the next = 1.55
+
+Each output level is the combination of one MOS being on and the rest off, so they combine into a single impedance, which then forms a resistor divider with the load.
+
+The output MOS will hold its impedance even if an extra 1V is added at the load resistor (reducing the MOS headroom)
 
 ## Non Linear Effects
 
