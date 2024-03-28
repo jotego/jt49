@@ -46,9 +46,9 @@ module jt49 ( // note that input ports are not multiplexed
     output           IOB_oe
 );
 
-parameter [1:0] COMP=2'b00;
+parameter [2:0] COMP=3'b000;
 parameter       CLKDIV=3;
-wire [1:0] comp = COMP;
+wire [2:0] comp = COMP;
 
 reg  [7:0] regarray[15:0];
 wire [7:0] port_A, port_B;

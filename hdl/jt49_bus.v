@@ -49,7 +49,7 @@ module jt49_bus ( // note that input ports are not multiplexed
     output           IOB_oe
 );
 
-parameter [1:0] COMP=2'b00;
+parameter [2:0] COMP=3'b000;
 
 reg wr_n, cs_n;
 reg [3:0] addr;
