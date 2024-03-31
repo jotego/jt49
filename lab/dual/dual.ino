@@ -7,7 +7,7 @@ const int A0PIN=8,  // PB0
 void setup() {
 	// Set ports B and D as an output
 	DDRD=0xff;
-	DDRB=0xff;
+	DDRB=0x07;
 	// PSG
 	psg_setup();
 }
@@ -47,18 +47,26 @@ void psg_setup() {
 	wrReg(6, 0x1f ); 	// noise
 
 	for(int k=010; k<013;k++ ) wrReg( k, 15 );
-	wrReg(011,10);
+	wrReg(011,13);
 	delay(11);
 }
 
+int edge() {
+	static int last=0;
+	int b = (PINB>>5)&1;
+	int edge = b && !last;
+	last = b;
+	return edge;
+}
+
 void loop() {
-	static unsigned old=0;
+	static unsigned old=0, volB=0;
 	unsigned amp = analogRead(A0)>>2;
-	wrReg( 0xf, amp>>4 ); // show on YM2203's port B	
-	// wrReg( 010, amp ); // volume channel A
-	// wrReg( 011, amp ); // volume channel B
-	// wrReg( 012, amp ); // volume channel B
-	if( old!= amp ) wrReg(2,0x80|(amp>>1));
+	// if( edge() ) volB += 4;
+	// 	// volB = volB==15 ? 0 : (volB<<1)|1;
+	// wrReg( 011, volB ); // volume channel B
+	// wrReg( 0xf, volB ); // show on YM2203's port B	
+	if( old!= amp ) wrReg(2,0x80|(amp>>3));
 	old=amp;
 	delay(20);
 }
