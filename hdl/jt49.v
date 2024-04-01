@@ -47,6 +47,7 @@ module jt49 ( // note that input ports are not multiplexed
 );
 
 parameter [2:0] COMP=3'b000;
+parameter       YM2203_LUMPED=0;
 parameter       CLKDIV=3;
 wire [2:0] comp = COMP;
 
@@ -168,7 +169,10 @@ always @(posedge clk) if( clk_en ) begin
     logC <= !Cmix ? 5'd0 : (use_envC ? envelope : volC );
 end
 
-reg [9:0] acc;
+reg  [9:0] acc;
+wire [9:0] elin;
+
+assign elin = {2'd0,lin};
 
 always @(posedge clk, negedge rst_n) begin
     if( !rst_n ) begin
@@ -180,7 +184,9 @@ always @(posedge clk, negedge rst_n) begin
         sound  <= 10'd0;
     end else if(clk_en) begin
         acc_st <= { acc_st[2:0], acc_st[3] };
-        acc <= acc + {2'b0,lin};
+        // Lumping the channel outputs for YM2203 will cause only the higher
+        // voltage to pass throuh, as the outputs seem to use a source follower.
+        acc    <= YM2203_LUMPED==1 ? (acc>elin ? acc : elin) : acc + elin;
         case( acc_st )
             4'b0001: begin
                 log   <= logA;

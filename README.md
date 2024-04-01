@@ -110,8 +110,10 @@ The output MOS will hold its impedance even if an extra 1V is added at the load 
 
 ## Non Linear Effects
 
-- Saturation effects are not modelled
-- Channel mixing effects by short circuiting the outputs are not modelled
+- Channel mixing effects by short circuiting the outputs in AY-3-8910 are not modelled
+- Non linearity in YM2203 when shorting all outputs is modeled via parameter YM2203_LUMPED
+
+Non linear effects depend on the way the chip is connected and its model. See [the connection list](doc/conn.md).
 
 ## Related Projects
 
