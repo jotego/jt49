@@ -21,7 +21,7 @@
     
     */
 
-
+/* verilator coverage_off */
 module jt49_div #(parameter W=12 )(   
     (* direct_enable *) input cen,
     input           clk, // this is the divided down clock from the core

@@ -21,7 +21,7 @@
     
     */
 
-
+/* verilator coverage_off */
 module jt49_noise(
   (* direct_enable *) input cen,
     input       clk,

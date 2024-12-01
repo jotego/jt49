@@ -20,7 +20,7 @@
     Based on sqmusic, by the same author
     
     */
-
+/* verilator coverage_off */
 module jt49_cen(
     input       clk,
     input       rst_n,

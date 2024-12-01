@@ -26,7 +26,7 @@
 // 1 -> 29.1
 // 2 -> 21.8
 // 3 -> 13.4
-
+/* verilator coverage_off */
 module jt49_exp(
     input            clk,
     input      [2:0] comp,  // compression
