@@ -38,14 +38,14 @@ always @(posedge clk, negedge rst_n ) begin
   if( !rst_n) begin
     count <= one;
     div   <= 1'b0;
-  end
-  else if(cen) begin
+  end else if(cen) begin
     if( count>=period ) begin
         count <= one;
         div   <= ~div;
+    end else begin
+        count <=  count + one ;
     end
-    else
-        /*if( period!={W{1'b0}} )*/ count <=  count + one ;
+    if(period==0) div<=0;
   end
 end
 
