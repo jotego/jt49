@@ -6,5 +6,5 @@ if which ncverilog; then
         +define+NCVERILOG +access+r +define+SIMULATION
 else
     iverilog test.v ../../hdl/filter/jt49_dcrm2.v \
-        -DSIMULATION -o sim && sim -lxt
+        -DSIMULATION -o sim && ./sim -lxt
 fi
