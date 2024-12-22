@@ -33,7 +33,7 @@ end
 
 wire div;
 
-jt49_div #(.width(4) ) uut (   
+jt49_div #(.W(4) ) uut (
     .clk    ( clk       ),
     .cen    ( cen       ),
     .rst_n  ( rst_n     ),
