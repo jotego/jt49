@@ -31,14 +31,14 @@ end
 // always @(negedge clk)
 //  cen <= ~cen;
 
-wire cen_div;
+wire div;
 
-jt49_div #(.width(4) ) uut (   
+jt49_div #(.W(4) ) uut (
     .clk    ( clk       ),
     .cen    ( cen       ),
     .rst_n  ( rst_n     ),
     .period ( period    ),
-    .cen_div( cen_div   )
+    .div    ( div       )
 );
 
 endmodule // jt49_cen_div
