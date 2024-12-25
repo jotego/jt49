@@ -37,6 +37,7 @@ wire noise_en;
 reg last_en;
 
 wire noise_up = noise_en && !last_en;
+wire [4:0] period1 = period ? period : 5'b1;
 
 always @(posedge clk ) if(cen) begin
     noise <= ~poly17[0];
@@ -55,7 +56,7 @@ jt49_div #(5) u_div(
   .clk    ( clk       ), 
   .cen    ( cen       ),
   .rst_n  ( rst_n     ), 
-  .period ( period    ), 
+  .period ( period1   ),
   .div    ( noise_en  ) 
 );
 
