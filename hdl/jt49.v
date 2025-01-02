@@ -69,6 +69,10 @@ assign IOA_oe  = regarray[7][6];
 assign IOB_oe  = regarray[7][7];
 assign sample  = cen16;
 
+wire [11:0] periodA = { regarray[1][3:0], regarray[0][7:0] };
+wire [11:0] periodB = { regarray[3][3:0], regarray[2][7:0] };
+wire [11:0] periodC = { regarray[5][3:0], regarray[4][7:0] };
+
 jt49_cen #(.CLKDIV(CLKDIV)) u_cen(
     .clk    ( clk     ),
     .rst_n  ( rst_n   ),
@@ -83,7 +87,7 @@ jt49_div #(12) u_chA(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
-    .period     ( {regarray[1][3:0], regarray[0][7:0] } ),
+    .period     ( periodA ? periodA : 12'b1 ),
     .div        ( bitA          )
 );
 
@@ -91,7 +95,7 @@ jt49_div #(12) u_chB(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
-    .period     ( {regarray[3][3:0], regarray[2][7:0] } ),
+    .period     ( periodB ? periodB : 12'b1 ),
     .div        ( bitB          )
 );
 
@@ -99,7 +103,7 @@ jt49_div #(12) u_chC(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
-    .period     ( {regarray[5][3:0], regarray[4][7:0] } ),
+    .period     ( periodC ? periodC : 12'b1 ),
     .div        ( bitC          )
 );
 
