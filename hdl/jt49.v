@@ -51,8 +51,9 @@ parameter       YM2203_LUMPED=0;
 parameter       CLKDIV=3;
 wire [2:0] comp = COMP;
 
-reg  [7:0] regarray[15:0];
-wire [7:0] port_A, port_B;
+reg  [ 7:0] regarray[15:0];
+wire [ 7:0] port_A, port_B;
+wire [11:0] periodA, periodB, periodC;
 
 wire [4:0] envelope;
 wire bitA, bitB, bitC;
@@ -68,6 +69,10 @@ assign port_B  = IOB_in;
 assign IOA_oe  = regarray[7][6];
 assign IOB_oe  = regarray[7][7];
 assign sample  = cen16;
+assign periodA = { regarray[1][3:0], regarray[0][7:0] };
+assign periodB = { regarray[3][3:0], regarray[2][7:0] };
+assign periodC = { regarray[5][3:0], regarray[4][7:0] };
+
 
 jt49_cen #(.CLKDIV(CLKDIV)) u_cen(
     .clk    ( clk     ),
@@ -83,7 +88,7 @@ jt49_div #(12) u_chA(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
-    .period     ( {regarray[1][3:0], regarray[0][7:0] } ),
+    .period     ( periodA       ),
     .div        ( bitA          )
 );
 
@@ -91,7 +96,7 @@ jt49_div #(12) u_chB(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
-    .period     ( {regarray[3][3:0], regarray[2][7:0] } ),
+    .period     ( periodB       ),
     .div        ( bitB          )
 );
 
@@ -99,7 +104,7 @@ jt49_div #(12) u_chC(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
-    .period     ( {regarray[5][3:0], regarray[4][7:0] } ),
+    .period     ( periodC       ),
     .div        ( bitC          )
 );
 
