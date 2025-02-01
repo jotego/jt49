@@ -28,7 +28,7 @@ YM2203 | Connection
  18-19 | NC/short to 20 (channels B, C)
  39    | NC
  36    | VCC (/RD)
- 34    | GND (/CS)
+ 34    | GND (/CS)R_US
  25-33 | NC
  22-23 | NC
  21    | VCC (supply)
