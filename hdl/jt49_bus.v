@@ -50,6 +50,7 @@ module jt49_bus ( // note that input ports are not multiplexed
 );
 
 parameter [2:0] COMP=3'b000;
+parameter       MUTE_NULL_PERIOD=1;
 
 reg wr_n, cs_n;
 reg [3:0] addr;
@@ -79,7 +80,10 @@ always @(posedge clk)
         endcase // {bdir,bc1}
     end
 
-jt49 #(.COMP(COMP)) u_jt49( // note that input ports are not multiplexed
+jt49 #(
+    .COMP             ( COMP             ),
+    .MUTE_NULL_PERIOD ( MUTE_NULL_PERIOD )
+) u_jt49( // note that input ports are not multiplexed
     .rst_n  (  rst_n     ),
     .clk    (  clk       ),    // signal on positive edge
     .clk_en (  clk_en    ),    // clock enable on negative edge
