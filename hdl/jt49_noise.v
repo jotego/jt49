@@ -22,7 +22,9 @@
     */
 
 /* verilator coverage_off */
-module jt49_noise(
+module jt49_noise #(
+  parameter PERIOD_ZERO_IS_ONE=0
+)(
   (* direct_enable *) input cen,
     input       clk,
     input       rst_n,
@@ -51,7 +53,10 @@ always @( posedge clk, negedge rst_n )
         poly17 <= { poly17[0] ^ poly17[3] ^ poly17_zero, poly17[16:1] };
   end
 
-jt49_div #(5) u_div( 
+jt49_div #(
+  .W                  ( 5                  ),
+  .PERIOD_ZERO_IS_ONE ( PERIOD_ZERO_IS_ONE )
+) u_div(
   .clk    ( clk       ), 
   .cen    ( cen       ),
   .rst_n  ( rst_n     ), 

@@ -49,6 +49,7 @@ module jt49 ( // note that input ports are not multiplexed
 parameter [2:0] COMP=3'b000;
 parameter       YM2203_LUMPED=0;
 parameter       CLKDIV=3;
+parameter       PERIOD_ZERO_IS_ONE=0;
 wire [2:0] comp = COMP;
 
 reg  [ 7:0] regarray[15:0];
@@ -84,7 +85,10 @@ jt49_cen #(.CLKDIV(CLKDIV)) u_cen(
 );
 
 // internal modules operate at clk/16
-jt49_div #(12) u_chA(
+jt49_div #(
+    .W                  ( 12                 ),
+    .PERIOD_ZERO_IS_ONE ( PERIOD_ZERO_IS_ONE )
+) u_chA(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
@@ -92,7 +96,10 @@ jt49_div #(12) u_chA(
     .div        ( bitA          )
 );
 
-jt49_div #(12) u_chB(
+jt49_div #(
+    .W                  ( 12                 ),
+    .PERIOD_ZERO_IS_ONE ( PERIOD_ZERO_IS_ONE )
+) u_chB(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
@@ -100,7 +107,10 @@ jt49_div #(12) u_chB(
     .div        ( bitB          )
 );
 
-jt49_div #(12) u_chC(
+jt49_div #(
+    .W                  ( 12                 ),
+    .PERIOD_ZERO_IS_ONE ( PERIOD_ZERO_IS_ONE )
+) u_chC(
     .clk        ( clk           ),
     .rst_n      ( rst_n         ),
     .cen        ( cen16         ),
@@ -108,7 +118,9 @@ jt49_div #(12) u_chC(
     .div        ( bitC          )
 );
 
-jt49_noise u_ng(
+jt49_noise #(
+    .PERIOD_ZERO_IS_ONE ( PERIOD_ZERO_IS_ONE )
+) u_ng(
     .clk    ( clk               ),
     .cen    ( cen16             ),
     .rst_n  ( rst_n             ),
