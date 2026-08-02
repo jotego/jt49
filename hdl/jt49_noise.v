@@ -23,7 +23,7 @@
 
 /* verilator coverage_off */
 module jt49_noise #(
-  parameter PERIOD_ZERO_IS_ONE=0
+  parameter MUTE_NULL_PERIOD=1
 )(
   (* direct_enable *) input cen,
     input       clk,
@@ -54,8 +54,8 @@ always @( posedge clk, negedge rst_n )
   end
 
 jt49_div #(
-  .W                  ( 5                  ),
-  .PERIOD_ZERO_IS_ONE ( PERIOD_ZERO_IS_ONE )
+  .W                ( 5                ),
+  .MUTE_NULL_PERIOD ( MUTE_NULL_PERIOD )
 ) u_div(
   .clk    ( clk       ), 
   .cen    ( cen       ),

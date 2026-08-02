@@ -24,7 +24,7 @@
 /* verilator coverage_off */
 module jt49_div #(
     parameter W=12,
-    parameter PERIOD_ZERO_IS_ONE=0
+    parameter MUTE_NULL_PERIOD=1
 )(
     (* direct_enable *) input cen,
     input           clk, // this is the divided down clock from the core
@@ -37,7 +37,7 @@ reg [W-1:0]count;
 
 wire [W-1:0] one = { {W-1{1'b0}}, 1'b1};
 wire [W-1:0] effective_period =
-    PERIOD_ZERO_IS_ONE && period == {W{1'b0}} ? one : period;
+    !MUTE_NULL_PERIOD && period == {W{1'b0}} ? one : period;
 
 always @(posedge clk, negedge rst_n ) begin
   if( !rst_n) begin
@@ -50,7 +50,7 @@ always @(posedge clk, negedge rst_n ) begin
     end else begin
         count <=  count + one ;
     end
-    if(!PERIOD_ZERO_IS_ONE && period==0) div<=0;
+    if(MUTE_NULL_PERIOD && period==0) div<=0;
   end
 end
 
