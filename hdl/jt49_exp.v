@@ -34,7 +34,7 @@ module jt49_exp(
     output reg [7:0] dout 
 );
 
-reg [7:0] lut[0:159];
+reg [7:0] lut[0:191];
 
 always @(posedge clk)
     dout <= lut[ {comp,din} ];
@@ -200,6 +200,40 @@ initial begin
     lut[157] = 8'd229;
     lut[158] = 8'd241;
     lut[159] = 8'd255;
+
+    // YM2203 channel voltage levels from the LLE model, scaled to 8 bits.
+    lut[160] = 8'd0;
+    lut[161] = 8'd0;
+    lut[162] = 8'd1;
+    lut[163] = 8'd2;
+    lut[164] = 8'd3;
+    lut[165] = 8'd3;
+    lut[166] = 8'd4;
+    lut[167] = 8'd5;
+    lut[168] = 8'd6;
+    lut[169] = 8'd7;
+    lut[170] = 8'd8;
+    lut[171] = 8'd9;
+    lut[172] = 8'd11;
+    lut[173] = 8'd14;
+    lut[174] = 8'd16;
+    lut[175] = 8'd18;
+    lut[176] = 8'd23;
+    lut[177] = 8'd27;
+    lut[178] = 8'd31;
+    lut[179] = 8'd35;
+    lut[180] = 8'd43;
+    lut[181] = 8'd51;
+    lut[182] = 8'd60;
+    lut[183] = 8'd68;
+    lut[184] = 8'd84;
+    lut[185] = 8'd101;
+    lut[186] = 8'd117;
+    lut[187] = 8'd132;
+    lut[188] = 8'd161;
+    lut[189] = 8'd192;
+    lut[190] = 8'd224;
+    lut[191] = 8'd255;
 
 end
 endmodule

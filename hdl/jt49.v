@@ -164,9 +164,9 @@ jt49_exp u_exp(
     .dout   ( lin  )
 );
 
-wire [4:0] volA = { regarray[ 8][3:0], regarray[ 8][3] };
-wire [4:0] volB = { regarray[ 9][3:0], regarray[ 9][3] };
-wire [4:0] volC = { regarray[10][3:0], regarray[10][3] };
+wire [4:0] volA = { regarray[ 8][3:0], (COMP==3'd5) | regarray[ 8][3] };
+wire [4:0] volB = { regarray[ 9][3:0], (COMP==3'd5) | regarray[ 9][3] };
+wire [4:0] volC = { regarray[10][3:0], (COMP==3'd5) | regarray[10][3] };
 wire use_envA = regarray[ 8][4];
 wire use_envB = regarray[ 9][4];
 wire use_envC = regarray[10][4];
