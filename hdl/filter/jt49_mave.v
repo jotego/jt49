@@ -50,10 +50,10 @@ reg signed [DW+depth-1:0] sum;
 always @(posedge clk)
     if( rst ) begin
         diff <= {DW+1{1'd0}};
-        sum  <= {DW+depth+1{1'd0}};
+        sum  <= {DW+depth{1'd0}};
     end else if(cen) begin
         diff <= {1'b0,din } - { 1'b0, dly0 };
-        sum  <= { {depth{diff[DW]}}, diff } + sum;
+        sum  <= { {depth-1{diff[DW]}}, diff } + sum;
     end
 assign dout = sum[DW+depth-1:depth];
 
