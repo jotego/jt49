@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+iverilog -g2012 -f gather.f -o sim
+vvp sim

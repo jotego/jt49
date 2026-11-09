@@ -34,7 +34,7 @@ module jt49_exp(
     output reg [7:0] dout 
 );
 
-reg [7:0] lut[0:191];
+reg [7:0] lut[0:223];
 
 always @(posedge clk)
     dout <= lut[ {comp,din} ];
@@ -234,6 +234,41 @@ initial begin
     lut[189] = 8'd192;
     lut[190] = 8'd224;
     lut[191] = 8'd255;
+
+    // Nemesis PCB curve measured by Olivier Scherler (Sept-2023).
+    // See cores/nemsis/hdl/jtnemsis_jt49_exp.v in JTCORES.
+    lut[192] = 8'd0;
+    lut[193] = 8'd9;
+    lut[194] = 8'd10;
+    lut[195] = 8'd12;
+    lut[196] = 8'd14;
+    lut[197] = 8'd16;
+    lut[198] = 8'd18;
+    lut[199] = 8'd21;
+    lut[200] = 8'd24;
+    lut[201] = 8'd28;
+    lut[202] = 8'd32;
+    lut[203] = 8'd36;
+    lut[204] = 8'd42;
+    lut[205] = 8'd48;
+    lut[206] = 8'd56;
+    lut[207] = 8'd64;
+    lut[208] = 8'd74;
+    lut[209] = 8'd85;
+    lut[210] = 8'd97;
+    lut[211] = 8'd112;
+    lut[212] = 8'd129;
+    lut[213] = 8'd144;
+    lut[214] = 8'd153;
+    lut[215] = 8'd162;
+    lut[216] = 8'd171;
+    lut[217] = 8'd181;
+    lut[218] = 8'd192;
+    lut[219] = 8'd203;
+    lut[220] = 8'd215;
+    lut[221] = 8'd228;
+    lut[222] = 8'd241;
+    lut[223] = 8'd255;
 
 end
 endmodule

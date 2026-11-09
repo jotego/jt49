@@ -129,3 +129,11 @@ sn76489an              | [JT89](https://github.com/jotego/jt89)
 OKI 6295               | [JT6295](https://github.com/jotego/jt6295)
 OKI MSM5205            | [JT5205](https://github.com/jotego/jt5205)
 NEC uPN7759            | [JT7759](https://github.com/jotego/jt7759)
+
+## Compression curves
+
+`COMP` selects a 32-entry output curve in `jt49_exp`. Curves 0 through 5
+provide the standard JT49 levels and the YM2203 levels. Curve 6 is the Nemesis
+PCB curve, measured by Olivier Scherler on an original board. Its values are
+used by the JTCORES Nemesis core. The YM2203 `COMP=5` volume-index behavior
+remains specific to that mode.
