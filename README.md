@@ -134,6 +134,6 @@ NEC uPN7759            | [JT7759](https://github.com/jotego/jt7759)
 
 `COMP` selects a 32-entry output curve in `jt49_exp`. Curves 0 through 5
 provide the standard JT49 levels and the YM2203 levels. Curve 6 is the Nemesis
-PCB curve, measured by Olivier Scherler on an original board. Its values are
+PCB curve, measured by LMN-san on an original board. Its values are
 used by the JTCORES Nemesis core. The YM2203 `COMP=5` volume-index behavior
 remains specific to that mode.
