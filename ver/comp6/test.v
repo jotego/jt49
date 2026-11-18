@@ -18,7 +18,7 @@ reg [4:0] din=0;
 wire [7:0] dout;
 integer i;
 // Golden values: COMP0..5 from upstream JT49 6f1247fe0282a70c86ea2b4d8aa901f5332c94db;
-// COMP6 from Olivier Scherler's Nemesis PCB curve (JTCORES jtnemsis_jt49_exp.v).
+// COMP6 from LMN-san's Nemesis PCB curve (JTCORES jtnemsis_jt49_exp.v).
 reg [7:0] expected [0:223];
 reg [7:0] previous;
 

@@ -235,7 +235,7 @@ initial begin
     lut[190] = 8'd224;
     lut[191] = 8'd255;
 
-    // Nemesis PCB curve measured by Olivier Scherler (Sept-2023).
+    // Nemesis PCB curve measured by LMN-san (Sept-2023).
     // See cores/nemsis/hdl/jtnemsis_jt49_exp.v in JTCORES.
     lut[192] = 8'd0;
     lut[193] = 8'd9;
